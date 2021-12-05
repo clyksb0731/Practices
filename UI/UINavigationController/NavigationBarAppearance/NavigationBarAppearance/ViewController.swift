@@ -20,7 +20,7 @@ class ViewController: UIViewController {
 
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithDefaultBackground()
+        appearance.configureWithTransparentBackground() // No nvaigation bar line
         appearance.backgroundColor = .green
         
         // MARK: NavigationBar appearance
