@@ -12,16 +12,19 @@ class FourthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .red
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         self.setNavigation()
     }
-    
 
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithDefaultBackground()
-        appearance.backgroundColor = .cyan
+        appearance.configureWithTransparentBackground() // No navigation bar line
+        appearance.backgroundColor = .clear // Navigation bar is transparent and blue color (root view) appears on it.
         
         // MARK: NavigationItem appearance for each view controller
         self.navigationItem.scrollEdgeAppearance = appearance
@@ -29,6 +32,8 @@ class FourthViewController: UIViewController {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
+        self.navigationController?.navigationBar.isTranslucent = false // But, if then, no navigation bar appears.
+        self.navigationController?.navigationBar.backgroundColor = .brown // Just navigation background color appears.
         
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
                                                                         .font:UIFont.systemFont(ofSize: 18, weight: .medium)]

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA341D4C275E779D000727E4 /* SixthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA341D4B275E779C000727E4 /* SixthViewController.swift */; };
 		CA926A86275C97CC00BE079F /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA926A85275C97CC00BE079F /* SecondViewController.swift */; };
 		CA926A88275C97D700BE079F /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA926A87275C97D700BE079F /* ThirdViewController.swift */; };
 		CA926A8A275C984A00BE079F /* FourthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA926A89275C984A00BE079F /* FourthViewController.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CA341D4B275E779C000727E4 /* SixthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixthViewController.swift; sourceTree = "<group>"; };
 		CA926A85275C97CC00BE079F /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		CA926A87275C97D700BE079F /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		CA926A89275C984A00BE079F /* FourthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourthViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				CA926A87275C97D700BE079F /* ThirdViewController.swift */,
 				CA926A89275C984A00BE079F /* FourthViewController.swift */,
 				CA926A8B275C9ABF00BE079F /* FifthViewController.swift */,
+				CA341D4B275E779C000727E4 /* SixthViewController.swift */,
 				CA9D516C275C602800160454 /* Main.storyboard */,
 				CA9D516F275C602800160454 /* Assets.xcassets */,
 				CA9D5171275C602800160454 /* LaunchScreen.storyboard */,
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA926A8C275C9ABF00BE079F /* FifthViewController.swift in Sources */,
+				CA341D4C275E779D000727E4 /* SixthViewController.swift in Sources */,
 				CA926A86275C97CC00BE079F /* SecondViewController.swift in Sources */,
 				CA9D516B275C602800160454 /* ViewController.swift in Sources */,
 				CA926A88275C97D700BE079F /* ThirdViewController.swift in Sources */,

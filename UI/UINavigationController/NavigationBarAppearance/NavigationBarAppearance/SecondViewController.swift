@@ -12,7 +12,11 @@ class SecondViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = .yellow // root view color
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         self.setNavigation()
     }
@@ -20,8 +24,8 @@ class SecondViewController: UIViewController {
 
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithDefaultBackground()
-        appearance.backgroundColor = .red
+        appearance.configureWithTransparentBackground() // No navigation bar line
+        appearance.backgroundColor = .clear // Navigation bar is transparent and yellow color (root view) appears on it.
         
         // MARK: NavigationItem appearance for each view controller
         self.navigationItem.scrollEdgeAppearance = appearance
@@ -29,6 +33,8 @@ class SecondViewController: UIViewController {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
+        self.navigationController?.navigationBar.isTranslucent = true // Default is true
+        self.navigationController?.navigationBar.backgroundColor = .blue // It appears because appearance background color is clear color
         
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
                                                                         .font:UIFont.systemFont(ofSize: 18, weight: .medium)]

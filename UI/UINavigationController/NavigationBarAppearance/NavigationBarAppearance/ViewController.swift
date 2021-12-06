@@ -13,10 +13,13 @@ class ViewController: UIViewController {
         super.viewDidLoad()
 
         self.view.backgroundColor = .white
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
         self.setNavigation()
     }
-    
 
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
@@ -24,11 +27,14 @@ class ViewController: UIViewController {
         appearance.backgroundColor = .green
         
         // MARK: NavigationBar appearance
+        // It affects all contained view's navigation bar because it is navigation bar's appearances.
         self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
         self.navigationController?.navigationBar.standardAppearance = appearance
         self.navigationController?.navigationBar.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
+        self.navigationController?.navigationBar.isTranslucent = true // Default is true
+        self.navigationController?.navigationBar.backgroundColor = .blue // It is ignored due to appearance background color.
         
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
                                                                         .font:UIFont.systemFont(ofSize: 18, weight: .medium)]
