@@ -9,10 +9,34 @@ import UIKit
 
 class LastViewController: UIViewController {
 
+    var viewDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15)
+        label.textColor = .black
+        label.backgroundColor = .white
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.text = """
+        Appearance: (from navigationBar)
+        > configureWithTransparentBackground()
+        > backgroundColor = .green
+        > where? no code (from navigationBar setting)
+        
+        NavigationBar: (from navigationBar)
+        > isTranslucent = true
+        > backgroundColor = .blue
+        """
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.view.backgroundColor = .cyan
+        
+        self.setViewDescriptionLabel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -33,6 +57,15 @@ class LastViewController: UIViewController {
         self.navigationItem.leftBarButtonItem?.tintColor = .black
     }
 
+    func setViewDescriptionLabel() {
+        self.view.addSubview(self.viewDescriptionLabel)
+        
+        let safeArea = self.view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            self.viewDescriptionLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            self.viewDescriptionLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
+        ])
+    }
 }
 
 extension LastViewController {

@@ -9,10 +9,34 @@ import UIKit
 
 class TenthViewController: UIViewController {
 
+    var viewDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15)
+        label.textColor = .black
+        label.backgroundColor = .white
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.text = """
+        Appearance:
+        > configureWithDefaultBackground()
+        > backgroundColor = .clear
+        > where? navigationItem
+        
+        NavigationBar:
+        > isTranslucent = true
+        > backgroundColor = .red
+        """
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .yellow // root view color
+        self.view.backgroundColor = .blue // root view color
+        
+        self.setViewDescriptionLabel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +70,15 @@ class TenthViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.tintColor = .black
     }
 
+    func setViewDescriptionLabel() {
+        self.view.addSubview(self.viewDescriptionLabel)
+        
+        let safeArea = self.view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            self.viewDescriptionLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            self.viewDescriptionLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
+        ])
+    }
 }
 
 extension TenthViewController {

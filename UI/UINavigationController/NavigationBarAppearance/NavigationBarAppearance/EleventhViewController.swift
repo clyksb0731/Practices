@@ -44,6 +44,28 @@ class EleventhViewController: UIViewController {
         
         return button
     }()
+    
+    var viewDescriptionLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15)
+        label.textColor = .black
+        label.backgroundColor = .white
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.text = """
+        Appearance:
+        > configureWithDefaultBackground()
+        > backgroundColor = .clear
+        > where? navigationItem
+        
+        NavigationBar:
+        > isTranslucent = false
+        > backgroundColor = .red
+        """
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +73,7 @@ class EleventhViewController: UIViewController {
         self.view.backgroundColor = .blue
         
         self.setButtons()
+        self.setViewDescriptionLabel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,6 +130,16 @@ class EleventhViewController: UIViewController {
             self.nextButton.heightAnchor.constraint(equalToConstant: 30),
             self.nextButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -5),
             self.nextButton.widthAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    func setViewDescriptionLabel() {
+        self.view.addSubview(self.viewDescriptionLabel)
+        
+        let safeArea = self.view.safeAreaLayoutGuide
+        NSLayoutConstraint.activate([
+            self.viewDescriptionLabel.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            self.viewDescriptionLabel.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
         ])
     }
 }
