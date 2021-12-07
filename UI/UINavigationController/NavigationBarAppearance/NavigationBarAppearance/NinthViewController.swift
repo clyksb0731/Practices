@@ -1,5 +1,5 @@
 //
-//  SixthViewController.swift
+//  NinthViewController.swift
 //  NavigationBarAppearance
 //
 //  Created by Yongseok Choi on 2021/12/07.
@@ -7,12 +7,12 @@
 
 import UIKit
 
-class SixthViewController: UIViewController {
+class NinthViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .yellow // root view color
+        self.view.backgroundColor = .white // root view color
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -24,8 +24,8 @@ class SixthViewController: UIViewController {
 
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground() // Navigation bar line appears
-        appearance.backgroundColor = .clear // Navigation bar is transparent and yellow color (root view) appears on it.
+        appearance.configureWithDefaultBackground() // Navigation bar line appears
+        appearance.backgroundColor = .cyan // Navigation bar is cyan color.
         
         // MARK: NavigationItem appearance for each view controller
         self.navigationItem.scrollEdgeAppearance = appearance
@@ -33,28 +33,28 @@ class SixthViewController: UIViewController {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
-        self.navigationController?.navigationBar.isTranslucent = true // Default is true
-        self.navigationController?.navigationBar.backgroundColor = .blue // It appears because appearance background color is clear color
+        self.navigationController?.navigationBar.isTranslucent = false // Default is true
+        self.navigationController?.navigationBar.backgroundColor = .blue // It is ignored due to appearance background color.
         
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 255, green: 255, blue: 255),
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 255, green: 0, blue: 0),
                                                                         .font:UIFont.systemFont(ofSize: 18, weight: .medium)]
-        self.navigationItem.title = "여섯 번째 뷰"
+        self.navigationItem.title = "아홉 번째 뷰"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "이전 뷰", style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
-        self.navigationItem.leftBarButtonItem?.tintColor = .white
+        self.navigationItem.leftBarButtonItem?.tintColor = .black
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음 뷰", style: .done, target: self, action: #selector(rightBarButtonItem(_:)))
-        self.navigationItem.rightBarButtonItem?.tintColor = .white
+        self.navigationItem.rightBarButtonItem?.tintColor = .black
     }
 
 }
 
-extension SixthViewController {
+extension NinthViewController {
     @objc func leftBarButtonItem(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
     
     @objc func rightBarButtonItem(_ sender: UIBarButtonItem) {
-        let seventhVC = SeventhViewController()
-        self.navigationController?.pushViewController(seventhVC, animated: true)
+        let tenthVC = TenthViewController()
+        self.navigationController?.pushViewController(tenthVC, animated: true)
     }
 }

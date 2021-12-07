@@ -24,7 +24,7 @@ class FourthViewController: UIViewController {
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithTransparentBackground() // No navigation bar line
-        appearance.backgroundColor = .clear // Navigation bar is transparent and blue color (root view) appears on it.
+        appearance.backgroundColor = .clear // Navigation bar is transparent and red color (root view) appears on it.
         
         // MARK: NavigationItem appearance for each view controller
         self.navigationItem.scrollEdgeAppearance = appearance

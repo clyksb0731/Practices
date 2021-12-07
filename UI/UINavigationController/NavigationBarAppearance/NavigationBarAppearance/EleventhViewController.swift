@@ -1,13 +1,13 @@
 //
-//  ThirdViewController.swift
+//  EleventhViewController.swift
 //  NavigationBarAppearance
 //
-//  Created by Yongseok Choi on 2021/12/05.
+//  Created by Yongseok Choi on 2021/12/07.
 //
 
 import UIKit
 
-class ThirdViewController: UIViewController {
+class EleventhViewController: UIViewController {
     
     lazy var previousButton: UIButton = {
         let button = UIButton()
@@ -27,7 +27,7 @@ class ThirdViewController: UIViewController {
         label.textColor = .black
         label.backgroundColor = .yellow
         label.textAlignment = .center
-        label.text = "세 번째 뷰"
+        label.text = "열한 번째 뷰"
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -61,8 +61,8 @@ class ThirdViewController: UIViewController {
 
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground() // No navigation bar line
-        appearance.backgroundColor = .clear // Navigation bar is transparent and blue color (root view) appears on it.
+        appearance.configureWithDefaultBackground() // Navigation bar line appears
+        appearance.backgroundColor = .clear // Navigation bar is clear color and default background appears on it.
         
         // MARK: NavigationItem appearance for each view controller
         self.navigationItem.scrollEdgeAppearance = appearance
@@ -70,12 +70,12 @@ class ThirdViewController: UIViewController {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
-        self.navigationController?.navigationBar.isTranslucent = false // But, if then, no navigation bar appears
-        self.navigationController?.navigationBar.backgroundColor = nil
+        self.navigationController?.navigationBar.isTranslucent = false // Nvaigation bar is not translucent under default background.
+        self.navigationController?.navigationBar.backgroundColor = .red // Navigation bar background color is red under default background.
         
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
                                                                         .font:UIFont.systemFont(ofSize: 18, weight: .medium)]
-        self.navigationItem.title = "세 번째 뷰"
+        self.navigationItem.title = "열한 번째 뷰"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "이전 뷰", style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         
@@ -111,14 +111,14 @@ class ThirdViewController: UIViewController {
     }
 }
 
-extension ThirdViewController {
+extension EleventhViewController {
     @objc func leftBarButtonItem(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
     
     @objc func rightBarButtonItem(_ sender: UIBarButtonItem) {
-        let fourthVC = FourthViewController()
-        self.navigationController?.pushViewController(fourthVC, animated: true)
+        let twelfthVC = TwelfthViewController()
+        self.navigationController?.pushViewController(twelfthVC, animated: true)
     }
     
     @objc func previousButton(_ sender: UIButton) {
@@ -127,7 +127,7 @@ extension ThirdViewController {
     }
     
     @objc func nextButton(_ sender: UIButton) {
-        let fourthVC = FourthViewController()
-        self.navigationController?.pushViewController(fourthVC, animated: true)
+        let twelfthVC = TwelfthViewController()
+        self.navigationController?.pushViewController(twelfthVC, animated: true)
     }
 }

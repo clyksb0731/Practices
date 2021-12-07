@@ -1,13 +1,13 @@
 //
-//  ThirdViewController.swift
+//  SeventhViewController.swift
 //  NavigationBarAppearance
 //
-//  Created by Yongseok Choi on 2021/12/05.
+//  Created by Yongseok Choi on 2021/12/07.
 //
 
 import UIKit
 
-class ThirdViewController: UIViewController {
+class SeventhViewController: UIViewController {
     
     lazy var previousButton: UIButton = {
         let button = UIButton()
@@ -27,7 +27,7 @@ class ThirdViewController: UIViewController {
         label.textColor = .black
         label.backgroundColor = .yellow
         label.textAlignment = .center
-        label.text = "세 번째 뷰"
+        label.text = "일곱 번째 뷰"
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -61,7 +61,7 @@ class ThirdViewController: UIViewController {
 
     func setNavigation() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithTransparentBackground() // No navigation bar line
+        appearance.configureWithOpaqueBackground() // Navigation bar line appears
         appearance.backgroundColor = .clear // Navigation bar is transparent and blue color (root view) appears on it.
         
         // MARK: NavigationItem appearance for each view controller
@@ -75,7 +75,7 @@ class ThirdViewController: UIViewController {
         
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
                                                                         .font:UIFont.systemFont(ofSize: 18, weight: .medium)]
-        self.navigationItem.title = "세 번째 뷰"
+        self.navigationItem.title = "일곱 번째 뷰"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "이전 뷰", style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
         self.navigationItem.leftBarButtonItem?.tintColor = .black
         
@@ -111,14 +111,14 @@ class ThirdViewController: UIViewController {
     }
 }
 
-extension ThirdViewController {
+extension SeventhViewController {
     @objc func leftBarButtonItem(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
     
     @objc func rightBarButtonItem(_ sender: UIBarButtonItem) {
-        let fourthVC = FourthViewController()
-        self.navigationController?.pushViewController(fourthVC, animated: true)
+        let eighthVC = EighthViewController()
+        self.navigationController?.pushViewController(eighthVC, animated: true)
     }
     
     @objc func previousButton(_ sender: UIButton) {
@@ -127,7 +127,7 @@ extension ThirdViewController {
     }
     
     @objc func nextButton(_ sender: UIButton) {
-        let fourthVC = FourthViewController()
-        self.navigationController?.pushViewController(fourthVC, animated: true)
+        let eighthVC = EighthViewController()
+        self.navigationController?.pushViewController(eighthVC, animated: true)
     }
 }
