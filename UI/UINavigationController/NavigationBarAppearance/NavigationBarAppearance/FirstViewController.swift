@@ -20,11 +20,15 @@ class FirstViewController: UIViewController {
         Appearance:
         > configureWithTransparentBackground()
         > backgroundColor = .green
+        > foregroundColor:blue
         > where? navigationBar
         
         NavigationBar:
         > isTranslucent = true
         > backgroundColor = .blue
+        
+        NavigationItem:
+        > tintColor = .black
         """
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -50,7 +54,7 @@ class FirstViewController: UIViewController {
         appearance.configureWithTransparentBackground() // No nvaigation bar line
         appearance.backgroundColor = .green
         appearance.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
+            NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 255),
             .font:UIFont.systemFont(ofSize: 18, weight: .medium)
         ]
         

@@ -20,11 +20,15 @@ class TenthViewController: UIViewController {
         Appearance:
         > configureWithDefaultBackground()
         > backgroundColor = .clear
+        > foregroundColor:green
         > where? navigationItem
         
         NavigationBar:
         > isTranslucent = true
         > backgroundColor = .red
+        
+        NavigationItem:
+        > tintColor = .black
         """
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -50,6 +54,10 @@ class TenthViewController: UIViewController {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithDefaultBackground() // Navigation bar line appears
         appearance.backgroundColor = .clear // Navigation bar is clear color and default background appears on it.
+        appearance.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 255, blue: 0),
+            .font:UIFont.systemFont(ofSize: 18, weight: .medium)
+        ]
         
         // MARK: NavigationItem appearance for each view controller
         self.navigationItem.scrollEdgeAppearance = appearance
@@ -60,12 +68,9 @@ class TenthViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true // Nvaigation bar is translucent under default background.
         self.navigationController?.navigationBar.backgroundColor = .red // Navigation bar background color is red under default background.
         
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
-                                                                        .font:UIFont.systemFont(ofSize: 18, weight: .medium)]
         self.navigationItem.title = "열 번째 뷰"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "이전 뷰", style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
         self.navigationItem.leftBarButtonItem?.tintColor = .black
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음 뷰", style: .done, target: self, action: #selector(rightBarButtonItem(_:)))
         self.navigationItem.rightBarButtonItem?.tintColor = .black
     }

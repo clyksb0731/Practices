@@ -20,11 +20,15 @@ class LastViewController: UIViewController {
         Appearance: (from navigationBar)
         > configureWithTransparentBackground()
         > backgroundColor = .green
+        > foregroundColor:blue
         > where? no code (from navigationBar setting)
         
         NavigationBar: (from navigationBar)
         > isTranslucent = true
         > backgroundColor = .blue
+        
+        NavigationItem:
+        > tintColor = .black
         """
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -50,8 +54,6 @@ class LastViewController: UIViewController {
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
         
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
-                                                                        .font:UIFont.systemFont(ofSize: 18, weight: .medium)]
         self.navigationItem.title = "마지막 뷰"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "이전 뷰", style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
         self.navigationItem.leftBarButtonItem?.tintColor = .black
