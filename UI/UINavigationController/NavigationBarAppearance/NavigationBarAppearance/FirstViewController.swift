@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class FirstViewController: UIViewController {
     
     var viewDescriptionLabel: UILabel = {
         let label = UILabel()
@@ -46,28 +46,19 @@ class ViewController: UIViewController {
     }
 
     func setNavigation() {
-        if #available(iOS 15.0, *) {
-            let appearance = UINavigationBarAppearance()
-            appearance.configureWithTransparentBackground() // No nvaigation bar line
-            appearance.backgroundColor = .green
-            appearance.titleTextAttributes = [
-                NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
-                .font:UIFont.systemFont(ofSize: 18, weight: .medium)
-            ]
-            
-            // MARK: NavigationBar appearance
-            // It affects all contained view's navigation bar because it is navigation bar's appearances.
-            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            self.navigationController?.navigationBar.standardAppearance = appearance
-            self.navigationController?.navigationBar.compactAppearance = appearance
-            
-        } else {
-            self.navigationController?.navigationBar.barTintColor = .blue
-            self.navigationController?.navigationBar.titleTextAttributes = [
-                NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 255, green: 0, blue: 0),
-                .font:UIFont.systemFont(ofSize: 18, weight: .medium)
-            ]
-        }
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground() // No nvaigation bar line
+        appearance.backgroundColor = .green
+        appearance.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor:UIColor.useRGB(red: 0, green: 0, blue: 0),
+            .font:UIFont.systemFont(ofSize: 18, weight: .medium)
+        ]
+        
+        // MARK: NavigationBar appearance
+        // It affects all contained view's navigation bar because it is navigation bar's appearances.
+        self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        self.navigationController?.navigationBar.standardAppearance = appearance
+        self.navigationController?.navigationBar.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
         self.navigationController?.navigationBar.isTranslucent = true // Default is true
@@ -90,7 +81,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController {
+extension FirstViewController {
     @objc func rightBarButtonItem(_ sender: UIBarButtonItem) {
         let secondVC = SecondViewController()
         self.navigationController?.pushViewController(secondVC, animated: true)
