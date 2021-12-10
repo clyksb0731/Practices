@@ -12,6 +12,10 @@ class ViewController: UIViewController {
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.bounces = false
+        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width * 2, height: 75)
+        scrollView.isPagingEnabled = true
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
         scrollView.delegate = self
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -35,15 +39,15 @@ class ViewController: UIViewController {
         return view
     }()
     
-    var addRecessButtonImage: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "addButtonImagge"))
+    var addRecessTimeButtonImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "addButtonImage"))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
     }()
     
-    var recessButtonViewLabel: UILabel = {
+    var recessTimeButtonViewLabel: UILabel = {
         let label = UILabel()
         label.layer.cornerRadius = 7
         label.layer.borderColor = UIColor.white.cgColor
@@ -57,6 +61,14 @@ class ViewController: UIViewController {
         return label
     }()
     
+    lazy var recessTimeButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(recessTimeButton(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     var workTimeButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.useRGB(red: 125, green: 243, blue: 110)
@@ -67,15 +79,15 @@ class ViewController: UIViewController {
         return view
     }()
     
-    var addWorkButtonImage: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "addButtonImagge"))
+    var addWorkTimeButtonImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "addButtonImage"))
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
         return imageView
     }()
     
-    var workButtonViewLabel: UILabel = {
+    var workTimeButtonViewLabel: UILabel = {
         let label = UILabel()
         label.layer.cornerRadius = 7
         label.layer.borderColor = UIColor.white.cgColor
@@ -89,28 +101,159 @@ class ViewController: UIViewController {
         return label
     }()
     
+    lazy var workTimeButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(workTimeButton(_:)), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     var pageControl: UIPageControl = {
         let pageControl = UIPageControl()
+        pageControl.currentPage = 0
+        pageControl.currentPageIndicatorTintColor = .black
+        pageControl.pageIndicatorTintColor = .gray
+        pageControl.hidesForSinglePage = true
+        pageControl.numberOfPages = 2
+        pageControl.addTarget(self, action: #selector(pageControl(_:)), for: .touchUpInside)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         
         return pageControl
     }()
+    
+    var previousPointX: CGFloat = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = .white
+        
+        self.setSubviews()
+        self.setLayouts()
     }
 }
 
 // MARK: - Extension for Essential Methods
 extension ViewController {
     func setSubviews() {
+        self.addSubviews([
+            self.scrollView,
+            self.pageControl
+        ], to: self.view)
         
+        self.addSubviews([
+            self.contentView
+        ], to: self.scrollView)
+        
+        self.addSubviews([
+            self.recessTimeButtonView,
+            self.workTimeButtonView
+        ], to: self.contentView)
+        
+        self.addSubviews([
+            self.addRecessTimeButtonImageView,
+            self.recessTimeButtonViewLabel,
+            self.recessTimeButton
+        ], to: self.recessTimeButtonView)
+        
+        self.addSubviews([
+            self.addWorkTimeButtonImageView,
+            self.workTimeButtonViewLabel,
+            self.workTimeButton
+        ], to: self.workTimeButtonView)
     }
     
     func setLayouts() {
+        let safeArea = self.view.safeAreaLayoutGuide
         
+        // Scroll view layout
+        NSLayoutConstraint.activate([
+            self.scrollView.bottomAnchor.constraint(equalTo: self.pageControl.topAnchor, constant: -10),
+            self.scrollView.heightAnchor.constraint(equalToConstant: 75),
+            self.scrollView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
+        ])
+        
+        // Page control layout
+        NSLayoutConstraint.activate([
+            self.pageControl.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor, constant: -17),
+            self.pageControl.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor)
+        ])
+        
+        // Content view layout
+        NSLayoutConstraint.activate([
+            self.contentView.topAnchor.constraint(equalTo: self.scrollView.topAnchor),
+            self.contentView.heightAnchor.constraint(equalTo: self.scrollView.heightAnchor),
+            self.contentView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor),
+            self.contentView.widthAnchor.constraint(equalToConstant: self.scrollView.contentSize.width)
+        ])
+        
+        let pageWidth = UIScreen.main.bounds.width
+        
+        // Recess time button view layout
+        NSLayoutConstraint.activate([
+            self.recessTimeButtonView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.recessTimeButtonView.heightAnchor.constraint(equalToConstant: 70),
+            self.recessTimeButtonView.centerXAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: pageWidth/2),
+            self.recessTimeButtonView.widthAnchor.constraint(equalToConstant: pageWidth - 88)
+        ])
+        
+        // Add recess time button image view layout
+        NSLayoutConstraint.activate([
+            self.addRecessTimeButtonImageView.centerYAnchor.constraint(equalTo: self.recessTimeButtonView.centerYAnchor),
+            self.addRecessTimeButtonImageView.heightAnchor.constraint(equalToConstant: 34),
+            self.addRecessTimeButtonImageView.centerXAnchor.constraint(equalTo: self.recessTimeButtonView.centerXAnchor),
+            self.addRecessTimeButtonImageView.widthAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // Recess time button view label layout
+        NSLayoutConstraint.activate([
+            self.recessTimeButtonViewLabel.centerYAnchor.constraint(equalTo: self.recessTimeButtonView.centerYAnchor),
+            self.recessTimeButtonViewLabel.heightAnchor.constraint(equalToConstant: 21),
+            self.recessTimeButtonViewLabel.centerXAnchor.constraint(equalTo: self.recessTimeButtonView.trailingAnchor, constant: -((pageWidth-88)/4)),
+            self.recessTimeButtonViewLabel.widthAnchor.constraint(equalToConstant: 61)
+        ])
+        
+        // Recess time button layout
+        NSLayoutConstraint.activate([
+            self.recessTimeButton.topAnchor.constraint(equalTo: self.recessTimeButtonView.topAnchor),
+            self.recessTimeButton.bottomAnchor.constraint(equalTo: self.recessTimeButtonView.bottomAnchor),
+            self.recessTimeButton.leadingAnchor.constraint(equalTo: self.recessTimeButtonView.leadingAnchor),
+            self.recessTimeButton.trailingAnchor.constraint(equalTo: self.recessTimeButtonView.trailingAnchor)
+        ])
+        
+        // Work time button view layout
+        NSLayoutConstraint.activate([
+            self.workTimeButtonView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
+            self.workTimeButtonView.heightAnchor.constraint(equalToConstant: 70),
+            self.workTimeButtonView.centerXAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -(pageWidth/2)),
+            self.workTimeButtonView.widthAnchor.constraint(equalToConstant: pageWidth - 88)
+        ])
+        
+        // Add work time button image view layout
+        NSLayoutConstraint.activate([
+            self.addWorkTimeButtonImageView.centerYAnchor.constraint(equalTo: self.workTimeButtonView.centerYAnchor),
+            self.addWorkTimeButtonImageView.heightAnchor.constraint(equalToConstant: 34),
+            self.addWorkTimeButtonImageView.centerXAnchor.constraint(equalTo: self.workTimeButtonView.centerXAnchor),
+            self.addWorkTimeButtonImageView.widthAnchor.constraint(equalToConstant: 34)
+        ])
+        
+        // Work time button view label layout
+        NSLayoutConstraint.activate([
+            self.workTimeButtonViewLabel.centerYAnchor.constraint(equalTo: self.workTimeButtonView.centerYAnchor),
+            self.workTimeButtonViewLabel.heightAnchor.constraint(equalToConstant: 21),
+            self.workTimeButtonViewLabel.centerXAnchor.constraint(equalTo: self.workTimeButtonView.trailingAnchor, constant: -((pageWidth-88)/4)),
+            self.workTimeButtonViewLabel.widthAnchor.constraint(equalToConstant: 61)
+        ])
+        
+        // Work time button layout
+        NSLayoutConstraint.activate([
+            self.workTimeButton.topAnchor.constraint(equalTo: self.workTimeButtonView.topAnchor),
+            self.workTimeButton.bottomAnchor.constraint(equalTo: self.workTimeButtonView.bottomAnchor),
+            self.workTimeButton.leadingAnchor.constraint(equalTo: self.workTimeButtonView.leadingAnchor),
+            self.workTimeButton.trailingAnchor.constraint(equalTo: self.workTimeButtonView.trailingAnchor)
+        ])
     }
 }
 
@@ -123,9 +266,78 @@ extension ViewController {
     }
 }
 
+// MARK: - Extension for Selector Methods
+extension ViewController {
+    @objc func recessTimeButton(_ sender: UIButton) {
+        print("Recess Time Button touched")
+    }
+    
+    @objc func workTimeButton(_ sender: UIButton) {
+        print("Work Time Button touched")
+    }
+    
+    @objc func pageControl(_ sender: UIPageControl) {
+        if sender.currentPage == 0 {
+            self.scrollView.setContentOffset(CGPoint(x: UIScreen.main.bounds.width, y: 0), animated: true)
+        }
+        
+        if sender.currentPage == 1 {
+            self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+        }
+    }
+}
+
 // MARK: - Extension for UIScrollDelegate
 extension ViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.x / scrollView.frame.width == 0 {
+            UIDevice.softHaptic()
+            
+            self.pageControl.currentPage = 0
+        }
+        
+        if scrollView.contentOffset.x / scrollView.frame.width == 1 {
+            UIDevice.softHaptic()
+            
+            self.pageControl.currentPage = 1
+        }
+    }
     
+//    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+//        if self.previousPointX < scrollView.contentOffset.x {
+//            UIDevice.softHaptic()
+//
+//            self.pageControl.currentPage = 1
+//
+//        } else {
+//            UIDevice.softHaptic()
+//
+//            self.pageControl.currentPage = 0
+//        }
+//    }
+//
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        self.previousPointX = scrollView.contentOffset.x
+//    }
+}
+
+// MARK: - Extension for UIDevice
+extension UIDevice {
+    // MARK: Make Haptic Effect
+    static func softHaptic() {
+        let haptic = UIImpactFeedbackGenerator(style: .soft)
+        haptic.impactOccurred()
+    }
+    
+    static func lightHaptic() {
+        let haptic = UIImpactFeedbackGenerator(style: .light)
+        haptic.impactOccurred()
+    }
+    
+    static func heavyHaptic() {
+        let haptic = UIImpactFeedbackGenerator(style: .heavy)
+        haptic.impactOccurred()
+    }
 }
 
 // MARK: - Extension for UIColor
