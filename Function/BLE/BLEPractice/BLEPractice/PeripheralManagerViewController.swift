@@ -135,6 +135,8 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
         self.connectionStateView.backgroundColor = .green
         
         self.enableObjects(on: true)
+        
+        print("Subscribed Central maximumUpdateValueLength: \(central.maximumUpdateValueLength)")
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
