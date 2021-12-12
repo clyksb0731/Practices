@@ -124,7 +124,6 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
     
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
         for request in requests {
-            request.characteristic
             if let data = request.value, let string = String(data: data, encoding: .utf8) {
                 self.synchronizingSwitch.isOn = string == "true" ? true : false
             }
