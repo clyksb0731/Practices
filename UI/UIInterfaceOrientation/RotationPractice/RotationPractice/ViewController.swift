@@ -14,14 +14,14 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-//        return UIInterfaceOrientationMask.portrait
-//    }
-//
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return [.portrait, .landscapeLeft]
+    }
+
+    // default: true
 //    override var shouldAutorotate: Bool {
 //        return true
 //    }
-
     
     @IBAction func controlRotation(_ sender: UIButton) {
         if UIDevice.current.orientation.isPortrait {
@@ -39,5 +39,20 @@ class ViewController: UIViewController {
             UIViewController.attemptRotationToDeviceOrientation()
         }
     }
+    
+    @IBAction func standardNavi(_ sender: UIButton) {
+        let standardNaviChildVC = StandardNaviChildViewController()
+        let naviVC = UINavigationController(rootViewController: standardNaviChildVC)
+        naviVC.modalPresentationStyle = .fullScreen
+        
+        self.present(naviVC, animated: true, completion: nil)
+    }
+    
+    @IBAction func customizedNavi(_ sender: UIButton) {
+        let customizedNaviChildVC = CustomizedNaviChildViewController()
+        let naviVC = CustomizedNavigationController(rootViewController: customizedNaviChildVC)
+        naviVC.modalPresentationStyle = .fullScreen
+        
+        self.present(naviVC, animated: true, completion: nil)
+    }
 }
-

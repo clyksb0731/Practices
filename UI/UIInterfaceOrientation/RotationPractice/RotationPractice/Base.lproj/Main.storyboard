@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,18 +16,45 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PYA-le-rbr">
-                                <rect key="frame" x="156" y="192" width="102" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PYA-le-rbr">
+                                <rect key="frame" x="136" y="163" width="142" height="56"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="56" id="80Y-z1-2SG"/>
+                                    <constraint firstAttribute="width" constant="142" id="D25-pP-YUA"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Portrait/LandscapeLeft"/>
                                 <connections>
                                     <action selector="controlRotation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DuE-w3-MEP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eKb-j4-83c">
+                                <rect key="frame" x="149.5" y="337" width="115" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Standard Navi"/>
+                                <connections>
+                                    <action selector="standardNavi:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dWD-pR-94T"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1s4-vu-uso">
+                                <rect key="frame" x="140.5" y="485" width="133" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Customized Navi"/>
+                                <connections>
+                                    <action selector="customizedNavi:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Joe-td-Nhi"/>
                                 </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="PYA-le-rbr" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="38p-Yr-smj"/>
+                            <constraint firstItem="1s4-vu-uso" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="AFa-1k-tFO"/>
+                            <constraint firstItem="eKb-j4-83c" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="KmG-om-Ltx"/>
+                            <constraint firstItem="PYA-le-rbr" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="119" id="WgF-1B-OjU"/>
+                            <constraint firstItem="eKb-j4-83c" firstAttribute="top" secondItem="PYA-le-rbr" secondAttribute="bottom" constant="118" id="m47-lN-A7h"/>
+                            <constraint firstItem="1s4-vu-uso" firstAttribute="top" secondItem="eKb-j4-83c" secondAttribute="bottom" constant="117" id="zBT-W1-nlJ"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
