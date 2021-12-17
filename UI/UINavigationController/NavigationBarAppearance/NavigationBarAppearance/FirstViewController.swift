@@ -85,7 +85,7 @@ class FirstViewController: UIViewController {
         ])
         
         let barButtonItem = UIBarButtonItem()
-        barButtonItem.title = "메뉴바"
+        barButtonItem.title = "메뉴"
         barButtonItem.tintColor = .black
         barButtonItem.menu = barButtonMenu
         
