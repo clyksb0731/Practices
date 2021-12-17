@@ -70,6 +70,27 @@ class FirstViewController: UIViewController {
         
         self.navigationItem.title = "첫 번째 뷰"
         
+        let barButtonMenu = UIMenu(title: "", children: [
+            UIAction(title: "Temp", image: nil, handler: { action in
+                
+            }),
+            UIAction(title: NSLocalizedString("Copy", comment: ""), image: nil, handler: {
+                (action) in }),
+            UIAction(title: NSLocalizedString("Rename", comment: ""), image: nil, handler: {(action) in
+            }),
+            UIAction(title: NSLocalizedString("Duplicate", comment: ""), image: nil, handler: {(action) in
+            }),
+            UIAction(title: NSLocalizedString("Move", comment: ""), image: nil, handler: {(action) in
+            })
+        ])
+        
+        let barButtonItem = UIBarButtonItem()
+        barButtonItem.title = "메뉴"
+        barButtonItem.tintColor = .black
+        barButtonItem.menu = barButtonMenu
+        
+        self.navigationItem.leftBarButtonItem = barButtonItem
+        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "다음 뷰", style: .done, target: self, action: #selector(rightBarButtonItem(_:)))
         self.navigationItem.rightBarButtonItem?.tintColor = .black
     }
