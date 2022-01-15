@@ -55,18 +55,17 @@ class PeripheralManagerViewController: UIViewController {
         }
     }
     
-    @IBAction func centralTabButton(_ sender: UIButton) {
-        self.tabBarController?.selectedIndex = 0
-    }
-    
-    @IBAction func peripheralTabButton(_ sender: UIButton) {
-        // nothing
-    }
-    
     func enableObjects(on: Bool) {
         self.synchronizingSwitch.isEnabled = on
         self.sendingTextField.isEnabled = on
         self.sendMessageButton.isEnabled = on
+    }
+    
+    func foundPeripheral() {
+        self.characteristic = CBMutableCharacteristic(type: UUIDs.characteristicUUID, properties: [.notify, .write], value: nil, permissions: [.readable, .writeable])
+        self.service = CBMutableService(type: UUIDs.serviceUUID, primary: true)
+        self.service.characteristics = [self.characteristic]
+        self.peripheralManager.add(self.service)
     }
 }
 
@@ -78,11 +77,10 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
         switch peripheral.state {
         case .poweredOn:
             print("Peripheral poweredOn")
+            self.foundPeripheral()
             
-            self.characteristic = CBMutableCharacteristic(type: UUIDs.characteristicUUID, properties: [.notify, .write], value: nil, permissions: [.readable, .writeable])
-            self.service = CBMutableService(type: UUIDs.serviceUUID, primary: true)
-            self.service.characteristics = [self.characteristic]
-            self.peripheralManager.add(self.service)
+        case .poweredOff:
+            print("Peripheral poweredOff")
             
         case .unknown:
             print("Peripheral unknown")
@@ -95,9 +93,6 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
             
         case .unauthorized:
             print("Peripheral unauthorized")
-            
-        case .poweredOff:
-            print("Peripheral poweredOff")
             
         default:
             print("Peripheral default")

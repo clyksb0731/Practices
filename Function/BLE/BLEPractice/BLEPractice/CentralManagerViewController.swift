@@ -61,14 +61,6 @@ class CentralManagerViewController: UIViewController {
         }
     }
     
-    @IBAction func centralTabButton(_ sender: UIButton) {
-        // nothing 
-    }
-    
-    @IBAction func peripheralTabButton(_ sender: UIButton) {
-        self.tabBarController?.selectedIndex = 1
-    }
-    
     func enableObjects(on: Bool) {
         self.synchronizingSwitch.isEnabled = on
         self.sendingTextField.isEnabled = on
@@ -76,12 +68,32 @@ class CentralManagerViewController: UIViewController {
     }
 }
 
-
-
 // MARK: - CBCentralManagerDelegate
 extension CentralManagerViewController: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        self.connectingButton.isEnabled = central.state == .poweredOn
+        switch central.state {
+        case .poweredOn:
+            print("Central poweredOn")
+            self.connectingButton.isEnabled = true
+            
+        case .poweredOff:
+            print("Central poweredOff")
+            
+        case .unknown:
+            print("Central unknown")
+            
+        case .resetting:
+            print("Central resetting")
+            
+        case .unsupported:
+            print("Central unsupported")
+            
+        case .unauthorized:
+            print("Central unauthorized")
+            
+        default:
+            print("Central default")
+        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {

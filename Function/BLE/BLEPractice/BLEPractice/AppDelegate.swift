@@ -18,14 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         
-        let centralManagerVC = storyboard.instantiateViewController(withIdentifier: "CentralManagerViewController") as! CentralManagerViewController
-        let peripheralManagerVC = storyboard.instantiateViewController(withIdentifier: "PeripheralManagerViewController") as! PeripheralManagerViewController
+        let initialVC = storyboard.instantiateViewController(withIdentifier: "InitialViewController") as! InitialViewController
         
-        let tabBarVC = UITabBarController()
-        tabBarVC.tabBar.isHidden = true
-        tabBarVC.viewControllers = [centralManagerVC, peripheralManagerVC]
-        
-        self.window?.rootViewController = tabBarVC
+        self.window?.rootViewController = initialVC
 
         self.window?.makeKeyAndVisible()
         

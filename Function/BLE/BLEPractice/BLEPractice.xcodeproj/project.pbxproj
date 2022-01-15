@@ -16,6 +16,7 @@
 		CA54BB6F27535471005BD93B /* PeripheralListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA54BB6E27535471005BD93B /* PeripheralListViewController.swift */; };
 		CA54BB7127535498005BD93B /* PeripheralCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA54BB7027535498005BD93B /* PeripheralCell.swift */; };
 		CA54BB7327538C6F005BD93B /* UUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA54BB7227538C6F005BD93B /* UUIDs.swift */; };
+		CACE4BD72793390800F9A279 /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CACE4BD62793390800F9A279 /* InitialViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		CA54BB6E27535471005BD93B /* PeripheralListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralListViewController.swift; sourceTree = "<group>"; };
 		CA54BB7027535498005BD93B /* PeripheralCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralCell.swift; sourceTree = "<group>"; };
 		CA54BB7227538C6F005BD93B /* UUIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDs.swift; sourceTree = "<group>"; };
+		CACE4BD62793390800F9A279 /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				CA54BB562753534F005BD93B /* AppDelegate.swift */,
+				CACE4BD62793390800F9A279 /* InitialViewController.swift */,
 				CA54BB6A2753542A005BD93B /* CentralManagerViewController.swift */,
 				CA54BB6E27535471005BD93B /* PeripheralListViewController.swift */,
 				CA54BB7027535498005BD93B /* PeripheralCell.swift */,
@@ -148,6 +151,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA54BB7327538C6F005BD93B /* UUIDs.swift in Sources */,
+				CACE4BD72793390800F9A279 /* InitialViewController.swift in Sources */,
 				CA54BB6F27535471005BD93B /* PeripheralListViewController.swift in Sources */,
 				CA54BB7127535498005BD93B /* PeripheralCell.swift in Sources */,
 				CA54BB6D2753543C005BD93B /* PeripheralManagerViewController.swift in Sources */,
