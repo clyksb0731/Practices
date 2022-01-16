@@ -55,7 +55,7 @@ class PeripheralListViewController: UIViewController {
     }
     
     @IBAction func goBackToThePreviousVC(_ sender: UIButton) {
-        self.centralManager.delegate = (self.presentingViewController as! UITabBarController).viewControllers?.first as! CentralManagerViewController
+        self.centralManager.delegate = self.presentingViewController as! CentralManagerViewController
         
         self.dismiss(animated: true, completion: nil)
     }
@@ -82,9 +82,9 @@ extension PeripheralListViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.centralManager.stopScan()
+        //self.centralManager.stopScan()
         
-        self.centralManager.delegate = (self.presentingViewController as! UITabBarController).viewControllers?.first as! CentralManagerViewController
+        self.centralManager.delegate = self.presentingViewController as! CentralManagerViewController
         self.centralManager.connect(self.peripheralList[indexPath.row], options: nil)
     }
 }

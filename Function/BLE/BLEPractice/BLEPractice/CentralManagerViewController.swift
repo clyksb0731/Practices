@@ -12,14 +12,33 @@ class CentralManagerViewController: UIViewController {
 
     @IBOutlet weak var connectionStateView: UIView!
     @IBOutlet weak var synchronizingSwitch: UISwitch!
-    @IBOutlet weak var sendingTextField: UITextField!
-    @IBOutlet weak var sendMessageButton: UIButton!
-    @IBOutlet weak var receivedMessageLabel: UILabel!
+    @IBOutlet weak var ownedTextView: UITextView!
+    @IBOutlet weak var ownedTextStateLabel: UILabel!
+    @IBOutlet weak var sendTextButton: UIButton!
+    @IBOutlet weak var receivingTextLabel: UILabel!
+    @IBOutlet weak var receivingTextStateLabel: UILabel!
+    @IBOutlet weak var readTextButton: UIButton!
     @IBOutlet weak var connectingButton: UIButton!
     
     var centralManager: CBCentralManager!
     var peripheral: CBPeripheral!
     var characteristic: CBCharacteristic!
+    
+    var ownedTextData = Data()
+    //var subData = Data()
+    var sentDataIndex: Int = 0
+    var amountToSend: Int = 0
+    //var isWritingEOM = false
+    var receivingTextData = Data()
+    
+    var dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale.current
+        dateFormatter.timeZone = TimeZone.current
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        return dateFormatter
+    }()
     
     var isBTConnected = false
     
@@ -30,7 +49,7 @@ class CentralManagerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.sendingTextField.delegate = self
+        self.ownedTextView.delegate = self
         
         self.connectionStateView.layer.cornerRadius = 25/2
         self.enableObjects(on: false)
@@ -39,11 +58,24 @@ class CentralManagerViewController: UIViewController {
     }
 
     @IBAction func synchronizingSwitch(_ sender: UISwitch) {
-        self.peripheral.writeValue(sender.isOn ? "true".data(using: .utf8)! : "false".data(using: .utf8)!, for: self.characteristic, type: .withResponse)
+        self.peripheral.writeValue(sender.isOn ? "switchOn".data(using: .utf8)! : "switchOff".data(using: .utf8)!, for: self.characteristic, type: .withResponse)
     }
     
-    @IBAction func sendingMessageButton(_ sender: Any) {
+    @IBAction func sendTextButton(_ sender: Any) {
+        guard let ownedTextData = self.ownedTextView.text.data(using: .utf8) else {
+            return
+        }
         
+        self.ownedTextData = ownedTextData
+        self.sentDataIndex = 0
+        
+        self.sendTextButton.isEnabled = false
+        
+        self.writeDataToCharacteristic()
+    }
+    
+    @IBAction func readTextButton(_ sender: Any) {
+        self.readDataFromCharacteristic()
     }
     
     @IBAction func openVCToConnectBT(_ sender: UIButton) {
@@ -61,10 +93,49 @@ class CentralManagerViewController: UIViewController {
         }
     }
     
+    func foundCentral() {
+        if let connectedPeripheral = self.centralManager.retrieveConnectedPeripherals(withServices: [UUIDs.serviceUUID]).last {
+            self.centralManager.connect(connectedPeripheral, options: nil)
+            
+        } else {
+            self.connectingButton.isEnabled = true
+        }
+    }
+    
+    func writeDataToCharacteristic() {
+        if self.sentDataIndex >= self.ownedTextData.count {
+            if let data = self.characteristic.value, let string = String(data: data, encoding: .utf8), string == "EOM" {
+                self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
+                self.ownedTextStateLabel.textColor = .red
+                
+                self.sendTextButton.isEnabled = true
+                
+            } else {
+                self.peripheral.writeValue("EOM".data(using: .utf8)!, for: self.characteristic, type: .withResponse)
+            }
+            
+            return
+        }
+        
+        self.amountToSend = self.ownedTextData.count + self.sentDataIndex
+        if let mtu = self.peripheral?.maximumWriteValueLength(for: .withResponse) {
+            self.amountToSend = min(self.amountToSend, mtu)
+        }
+        
+        let subData = self.ownedTextData.subdata(in: self.sentDataIndex..<(self.amountToSend + self.sentDataIndex))
+        
+        self.peripheral.writeValue(subData, for: self.characteristic, type: .withResponse)
+    }
+    
+    func readDataFromCharacteristic() {
+        self.peripheral.writeValue("readData".data(using: .utf8)!, for: self.characteristic, type: .withoutResponse)
+    }
+    
     func enableObjects(on: Bool) {
         self.synchronizingSwitch.isEnabled = on
-        self.sendingTextField.isEnabled = on
-        self.sendMessageButton.isEnabled = on
+        self.ownedTextView.isEditable = on
+        self.sendTextButton.isEnabled = on
+        self.readTextButton.isEnabled = on
     }
 }
 
@@ -74,7 +145,7 @@ extension CentralManagerViewController: CBCentralManagerDelegate {
         switch central.state {
         case .poweredOn:
             print("Central poweredOn")
-            self.connectingButton.isEnabled = true
+            self.foundCentral()
             
         case .poweredOff:
             print("Central poweredOff")
@@ -99,6 +170,7 @@ extension CentralManagerViewController: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         self.isBTConnected = true
         self.connectingButton.setTitle("Disconnect", for: .normal)
+        self.connectingButton.isEnabled = true
         
         central.stopScan()
         
@@ -112,7 +184,7 @@ extension CentralManagerViewController: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         if let error = error {
-            print("Did disconnect error: \(error.localizedDescription)")
+            print("didDisconnectPeripheral Error: \(error.localizedDescription)")
         }
         
         self.isBTConnected = false
@@ -132,7 +204,8 @@ extension CentralManagerViewController: CBCentralManagerDelegate {
 // MARK: - CBPeripheralDelegate
 extension CentralManagerViewController: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard error == nil else {
+        if let error = error {
+            print("didDiscoverServices Error: \(error.localizedDescription)")
             return
         }
         
@@ -148,7 +221,8 @@ extension CentralManagerViewController: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        guard error == nil else {
+        if let error = error {
+            print("didDiscoverCharacteristicsFor Error: \(error.localizedDescription)")
             return
         }
         
@@ -164,7 +238,8 @@ extension CentralManagerViewController: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
-        guard error == nil else {
+        if let error = error {
+            print("didUpdateNotificationStateFor Error: \(error.localizedDescription)")
             return
         }
         
@@ -179,30 +254,52 @@ extension CentralManagerViewController: CBPeripheralDelegate {
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        guard error == nil else {
+        if let error = error {
+            print("didUpdateValueFor Error: \(error.localizedDescription)")
             return
         }
         
-        if let data = characteristic.value, let string = String(data: data, encoding: .utf8) {
-            self.synchronizingSwitch.isOn = string == "true" ? true : false
+        if let data = characteristic.value {
+            if let string = String(data: data, encoding: .utf8), string == "switchOn" {
+                self.synchronizingSwitch.isOn = true
+                
+            } else if let string = String(data: data, encoding: .utf8), string == "switchOff" {
+                self.synchronizingSwitch.isOn = false
+                
+            } else if let string = String(data: data, encoding: .utf8), string == "EOM" {
+                self.receivingTextLabel.text = String(data: self.receivingTextData, encoding: .utf8)
+                self.receivingTextStateLabel.text = "Received at \(self.dateFormatter.string(from: Date()))"
+                self.receivingTextStateLabel.textColor = .red
+                
+            } else {
+                self.receivingTextData.append(data)
+            }
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        if let data = characteristic.value {
-            print("didWriteValueFor: " + String(data: data, encoding: .utf8)!)
-        }
-        
         if let error = error {
             print("didWriteValueFor Error: \(error.localizedDescription)")
+            
+            return
         }
+        
+        self.sentDataIndex += self.amountToSend
+        
+        self.writeDataToCharacteristic()
+    }
+    
+    func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {
+        // code
     }
 }
 
-extension CentralManagerViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+extension CentralManagerViewController: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+      if (text == "\n") {
+        textView.resignFirstResponder()
+      }
         
-        return true
+      return true
     }
 }
