@@ -123,6 +123,7 @@ class ViewController: UIViewController {
     }()
     
     var previousPointX: CGFloat = 0
+    var isHaptic: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -290,35 +291,67 @@ extension ViewController {
 // MARK: - Extension for UIScrollDelegate
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.x / scrollView.frame.width == 0 {
-            UIDevice.softHaptic()
-            
-            self.pageControl.currentPage = 0
-        }
+        print("scrollViewDidScroll: \(scrollView.contentOffset.x)")
         
-        if scrollView.contentOffset.x / scrollView.frame.width == 1 {
-            UIDevice.softHaptic()
+        let centerXPoint: CGFloat = scrollView.frame.width / 2
+        print("CneterXPoint: \(centerXPoint)")
+        
+        if self.previousPointX >= 0 && self.previousPointX < centerXPoint {
+            if scrollView.contentOffset.x >= centerXPoint {
+                if !self.isHaptic {
+                    UIDevice.softHaptic()
+                    self.isHaptic = true
+                }
+                
+                self.pageControl.currentPage = 1
+                
+            } else {
+                self.isHaptic = false
+                
+                self.pageControl.currentPage = 0
+            }
             
-            self.pageControl.currentPage = 1
+        } else {
+            if scrollView.contentOffset.x < centerXPoint {
+                if !self.isHaptic {
+                    UIDevice.softHaptic()
+                    self.isHaptic = true
+                }
+                
+                self.pageControl.currentPage = 0
+                
+            } else {
+                self.isHaptic = false
+                
+                self.pageControl.currentPage = 1
+            }
         }
     }
     
-//    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-//        if self.previousPointX < scrollView.contentOffset.x {
-//            UIDevice.softHaptic()
-//
-//            self.pageControl.currentPage = 1
-//
-//        } else {
-//            UIDevice.softHaptic()
-//
-//            self.pageControl.currentPage = 0
-//        }
-//    }
-//
-//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        self.previousPointX = scrollView.contentOffset.x
-//    }
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewWillBeginDecelerating: \(scrollView.contentOffset.x)")
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewDidEndDecelerating: \(scrollView.contentOffset.x)")
+        
+        self.isHaptic = false
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        print("scrollViewWillBeginDragging: \(scrollView.contentOffset.x)")
+        
+        self.previousPointX = scrollView.contentOffset.x
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if decelerate {
+            print("scrollViewDidEndDragging willDecelerate: \(scrollView.contentOffset.x)")
+            
+        } else {
+            print("scrollViewDidEndDragging willNotDecelerate: \(scrollView.contentOffset.x)")
+        }
+    }
 }
 
 // MARK: - Extension for UIDevice
