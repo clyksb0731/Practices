@@ -65,7 +65,7 @@ class SecondViewController: UIViewController {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
-        self.navigationController?.navigationBar.isTranslucent = true // Default is true
+        self.navigationController?.navigationBar.isTranslucent = true // Default is true // Root view's background color appears on navigation bar appearance area due to the translucent navigation bar.
         self.navigationController?.navigationBar.backgroundColor = .blue // It appears because appearance background color is clear color
         
         self.navigationItem.title = "두 번째 뷰"

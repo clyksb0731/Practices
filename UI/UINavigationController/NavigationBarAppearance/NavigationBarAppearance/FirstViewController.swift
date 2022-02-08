@@ -64,9 +64,14 @@ class FirstViewController: UIViewController {
         self.navigationController?.navigationBar.standardAppearance = appearance
         self.navigationController?.navigationBar.compactAppearance = appearance
         
+        /*
+        ** Navigation bar area hierarchy **
+         Up - Appearance - NavigationBar - Root View - Down
+        */
+        
         self.navigationController?.setNavigationBarHidden(false, animated: true);
-        self.navigationController?.navigationBar.isTranslucent = true // Default is true
-        self.navigationController?.navigationBar.backgroundColor = .blue // It is ignored due to appearance background color.
+        self.navigationController?.navigationBar.isTranslucent = true // Default is true -> navigation bar is translucent. So root view color could appear on navigation bar appearance area but navigation bar appearance is upper so root view color doesn't appear.
+        self.navigationController?.navigationBar.backgroundColor = .blue // It is ignored due to navigation bar appearance background color.
         
         self.navigationItem.title = "첫 번째 뷰"
         

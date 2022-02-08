@@ -101,8 +101,8 @@ class ThirdViewController: UIViewController {
         self.navigationItem.compactAppearance = appearance
         
         self.navigationController?.setNavigationBarHidden(false, animated: true);
-        self.navigationController?.navigationBar.isTranslucent = false // But, if then, no navigation bar appears
-        self.navigationController?.navigationBar.backgroundColor = nil
+        self.navigationController?.navigationBar.isTranslucent = false // No navigation bar appearance color appears because (1)navigation bar appearance color is clear, (2)navigation bar is not translucent (So the root view's color doesn't appear) and (3)navigation bar color is nil.
+        self.navigationController?.navigationBar.backgroundColor = nil // For only navigation bar area (not navigation bar appearance).
         
         self.navigationItem.title = "세 번째 뷰"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "이전 뷰", style: .plain, target: self, action: #selector(leftBarButtonItem(_:)))
