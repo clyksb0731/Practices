@@ -10,7 +10,8 @@ import CoreBluetooth
 
 class PeripheralManagerViewController: UIViewController {
 
-    @IBOutlet weak var connectionStateView: UIView!
+    @IBOutlet weak var subscribingSwitchStateView: UIView!
+    @IBOutlet weak var subscribingTextStateView: UIView!
     @IBOutlet weak var synchronizingSwitch: UISwitch!
     @IBOutlet weak var ownedTextView: UITextView!
     @IBOutlet weak var ownedTextStateLabel: UILabel!
@@ -21,7 +22,8 @@ class PeripheralManagerViewController: UIViewController {
     
     var connectedCentral: CBCentral!
     var peripheralManager: CBPeripheralManager!
-    var characteristic: CBCharacteristic!
+    var characteristicForText: CBCharacteristic!
+    var characteristicForSwitch: CBCharacteristic!
     var service: CBMutableService!
     
     var ownedTextData = Data()
@@ -47,43 +49,20 @@ class PeripheralManagerViewController: UIViewController {
         
         self.ownedTextView.delegate = self
         
-        self.connectionStateView.layer.cornerRadius = 25/2
-        self.enableObjects(on: false)
+        self.subscribingTextStateView.layer.cornerRadius = 25/2
+        self.subscribingSwitchStateView.layer.cornerRadius = 25/2
+        self.enableObjectsRelatedToSwitch(on: false)
+        self.enableObjectsRelatedToText(on: false)
         
         self.peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey:true])
     }
+}
 
-    @IBAction func synchronizingSwitch(_ sender: UISwitch) {
-        self.peripheralManager.updateValue(sender.isOn ? "switchOn".data(using: .utf8)! : "switchOff".data(using: .utf8)!, for: self.characteristic as! CBMutableCharacteristic, onSubscribedCentrals: nil)
-    }
-    
-    @IBAction func updateTextButton(_ sender: Any) {
-        guard let ownedTextData = self.ownedTextView.text.data(using: .utf8) else {
-            return
-        }
-        
-        self.ownedTextData = ownedTextData
-        self.sentDataIndex = 0
-        
-        self.updateTextButton.isEnabled = false
-        
-        self.updateDataToCharacteristic()
-    }
-    
-    @IBAction func startAdvertisingButton(_ sender: UIButton) {
-        if self.peripheralManager.isAdvertising {
-            self.peripheralManager.stopAdvertising()
-            
-            self.startAdvertisingButton.setTitle("Start Advertising", for: .normal)
-            
-        } else {
-            self.peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey:"BLE 테스트", CBAdvertisementDataServiceUUIDsKey:[UUIDs.serviceUUID]])
-        }
-    }
-    
-    func updateDataToCharacteristic() {
+// MARK: - Extension for Methods add
+extension PeripheralManagerViewController {
+    func updateDataToCharacteristicForText() {
         if self.isSendingEOM {
-            if self.peripheralManager.updateValue("EOM".data(using: .utf8)!, for: self.characteristic as! CBMutableCharacteristic, onSubscribedCentrals: nil) {
+            if self.peripheralManager.updateValue("EOM".data(using: .utf8)!, for: self.characteristicForText as! CBMutableCharacteristic, onSubscribedCentrals: nil) {
                 
                 self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
                 self.ownedTextStateLabel.textColor = .red
@@ -108,13 +87,13 @@ class PeripheralManagerViewController: UIViewController {
             
             let subData = self.ownedTextData.subdata(in: self.sentDataIndex..<(amountToSend + self.sentDataIndex))
             
-            if self.peripheralManager.updateValue(subData, for: self.characteristic as! CBMutableCharacteristic, onSubscribedCentrals: nil) {
+            if self.peripheralManager.updateValue(subData, for: self.characteristicForText as! CBMutableCharacteristic, onSubscribedCentrals: nil) {
                 self.sentDataIndex += amountToSend
                 
                 if self.sentDataIndex >= self.ownedTextData.count {
                     self.isSendingEOM = true
                     
-                    if self.peripheralManager.updateValue("EOM".data(using: .utf8)!, for: self.characteristic as! CBMutableCharacteristic, onSubscribedCentrals: nil) {
+                    if self.peripheralManager.updateValue("EOM".data(using: .utf8)!, for: self.characteristicForText as! CBMutableCharacteristic, onSubscribedCentrals: nil) {
                         
                         self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
                         self.ownedTextStateLabel.textColor = .red
@@ -133,21 +112,63 @@ class PeripheralManagerViewController: UIViewController {
         }
     }
     
-    func enableObjects(on: Bool) {
+    func enableObjectsRelatedToSwitch(on: Bool) {
         self.synchronizingSwitch.isEnabled = on
+        
+        self.subscribingSwitchStateView.backgroundColor = on ? .green : .red
+    }
+    
+    func enableObjectsRelatedToText(on: Bool) {
         self.ownedTextView.isEditable = on
         self.updateTextButton.isEnabled = on
+        
+        self.subscribingTextStateView.backgroundColor = on ? .green : .red
     }
     
     func foundPeripheral() {
-        self.characteristic = CBMutableCharacteristic(type: UUIDs.characteristicUUID, properties: [.notify, .write], value: nil, permissions: [.readable, .writeable])
+        self.characteristicForSwitch = CBMutableCharacteristic(type: UUIDs.characteristicForSwitchUUID, properties: [.notify, .write], value: nil, permissions: [.readable, .writeable])
+        self.characteristicForText = CBMutableCharacteristic(type: UUIDs.characteristicForTextUUID, properties: [.notify, .write], value: nil, permissions: [.readable, .writeable])
+        
         self.service = CBMutableService(type: UUIDs.serviceUUID, primary: true)
-        self.service.characteristics = [self.characteristic]
+        
+        self.service.characteristics = [self.characteristicForSwitch, self.characteristicForText]
+        
         self.peripheralManager.add(self.service)
     }
 }
 
-// MARK: - CBPeripheralManagerDelegate
+// MARK: - Extension for Selector methods
+extension PeripheralManagerViewController {
+    @IBAction func synchronizingSwitch(_ sender: UISwitch) {
+        self.peripheralManager.updateValue(sender.isOn ? "switchOn".data(using: .utf8)! : "switchOff".data(using: .utf8)!, for: self.characteristicForSwitch as! CBMutableCharacteristic, onSubscribedCentrals: nil)
+    }
+    
+    @IBAction func updateTextButton(_ sender: Any) {
+        guard let ownedTextData = self.ownedTextView.text.data(using: .utf8) else {
+            return
+        }
+        
+        self.ownedTextData = ownedTextData
+        self.sentDataIndex = 0
+        
+        self.updateTextButton.isEnabled = false
+        
+        self.updateDataToCharacteristicForText()
+    }
+    
+    @IBAction func startAdvertisingButton(_ sender: UIButton) {
+        if self.peripheralManager.isAdvertising {
+            self.peripheralManager.stopAdvertising()
+            
+            self.startAdvertisingButton.setTitle("Start Advertising", for: .normal)
+            
+        } else {
+            self.peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey:"BLE 테스트", CBAdvertisementDataServiceUUIDsKey:[UUIDs.serviceUUID]])
+        }
+    }
+}
+
+// MARK: - Extension for CBPeripheralManagerDelegate
 extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
     func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
         self.startAdvertisingButton.isEnabled = peripheral.state == .poweredOn
@@ -199,25 +220,36 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
         print("didReceiveWrite")
         
         for request in requests { // Considered that only one request exists
-            if let data = request.value {
-                if let string = String(data: data, encoding: .utf8), string == "switchOn" {
-                    self.synchronizingSwitch.isOn = true
+            if request.characteristic.uuid == UUIDs.characteristicForSwitchUUID {
+                if let data = request.value {
+                    if let string = String(data: data, encoding: .utf8), string == "switchOn" {
+                        self.synchronizingSwitch.isOn = true
+                    }
                     
-                } else if let string = String(data: data, encoding: .utf8), string == "switchOff" {
-                    self.synchronizingSwitch.isOn = false
-                    
-                } else if let string = String(data: data, encoding: .utf8), string == "readData" {
-                    self.updateDataToCharacteristic()
-                    
-                } else if let string = String(data: data, encoding: .utf8), string == "EOM" {
-                    self.receivingTextLabel.text = String(data: self.receivingTextData, encoding: .utf8)
-                    self.receivingTextStateLabel.text = "Received at \(self.dateFormatter.string(from: Date()))"
-                    self.receivingTextStateLabel.textColor = .red
-                    
-                } else {
-                    self.receivingTextData.append(data)
+                    if let string = String(data: data, encoding: .utf8), string == "switchOff" {
+                        self.synchronizingSwitch.isOn = false
+                    }
                 }
             }
+            
+            if request.characteristic.uuid == UUIDs.characteristicForTextUUID {
+                if let data = request.value {
+                    if let string = String(data: data, encoding: .utf8), string == "readData" {
+                        self.updateDataToCharacteristicForText()
+                        
+                    } else if let string = String(data: data, encoding: .utf8), string == "EOM" {
+                        self.receivingTextLabel.text = String(data: self.receivingTextData, encoding: .utf8)
+                        self.receivingTextStateLabel.text = "Received at \(self.dateFormatter.string(from: Date()))"
+                        self.receivingTextStateLabel.textColor = .red
+                        
+                        self.receivingTextData = Data()
+                        
+                    } else {
+                        self.receivingTextData.append(data)
+                    }
+                }
+            }
+            
             
             peripheral.respond(to: request, withResult: .success)
         }
@@ -226,19 +258,28 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
         self.connectedCentral = central
         
-        self.connectionStateView.backgroundColor = .green
+        if characteristic.uuid == UUIDs.characteristicForSwitchUUID {
+            self.enableObjectsRelatedToSwitch(on: true) // not using isNotifying
+        }
         
-        self.enableObjects(on: true)
+        if characteristic.uuid == UUIDs.characteristicForTextUUID {
+            self.enableObjectsRelatedToText(on: true) // not using isNotifying
+        }
     }
     
     func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
-        self.connectionStateView.backgroundColor = .red
         
-        self.enableObjects(on: false)
+        if characteristic.uuid == UUIDs.characteristicForSwitchUUID {
+            self.enableObjectsRelatedToSwitch(on: false)
+        }
+        
+        if characteristic.uuid == UUIDs.characteristicForTextUUID {
+            self.enableObjectsRelatedToText(on: false)
+        }
     }
     
     func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
-        self.updateDataToCharacteristic()
+        self.updateDataToCharacteristicForText()
     }
 }
 

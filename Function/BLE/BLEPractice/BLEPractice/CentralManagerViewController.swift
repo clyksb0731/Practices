@@ -10,7 +10,8 @@ import CoreBluetooth
 
 class CentralManagerViewController: UIViewController {
 
-    @IBOutlet weak var connectionStateView: UIView!
+    @IBOutlet weak var subscribingSwitchStateView: UIView!
+    @IBOutlet weak var subscribingTextStateView: UIView!
     @IBOutlet weak var synchronizingSwitch: UISwitch!
     @IBOutlet weak var ownedTextView: UITextView!
     @IBOutlet weak var ownedTextStateLabel: UILabel!
@@ -22,7 +23,8 @@ class CentralManagerViewController: UIViewController {
     
     var centralManager: CBCentralManager!
     var peripheral: CBPeripheral!
-    var characteristic: CBCharacteristic!
+    var characteristicForText: CBCharacteristic!
+    var characteristicForSwitch: CBCharacteristic!
     
     var ownedTextData = Data()
     //var subData = Data()
@@ -51,14 +53,74 @@ class CentralManagerViewController: UIViewController {
         
         self.ownedTextView.delegate = self
         
-        self.connectionStateView.layer.cornerRadius = 25/2
-        self.enableObjects(on: false)
+        self.subscribingSwitchStateView.layer.cornerRadius = 25/2
+        self.subscribingTextStateView.layer.cornerRadius = 25/2
+        self.enableObjectsRelatedToSwitch(on: false)
+        self.enableObjectsRelatedToText(on: false)
         
         self.centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
     }
+}
 
+// MARK: - Extension for Methods add
+extension CentralManagerViewController {
+    func foundCentral() {
+        if let connectedPeripheral = self.centralManager.retrieveConnectedPeripherals(withServices: [UUIDs.serviceUUID]).last {
+            self.centralManager.connect(connectedPeripheral, options: nil)
+            
+        } else {
+            self.connectingButton.isEnabled = true
+        }
+    }
+    
+    func writeDataToCharacteristic() {
+        if self.sentDataIndex >= self.ownedTextData.count {
+            if let data = self.characteristicForText.value, let string = String(data: data, encoding: .utf8), string == "EOM" {
+                self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
+                self.ownedTextStateLabel.textColor = .red
+                
+                self.sendTextButton.isEnabled = true
+                
+            } else {
+                self.peripheral.writeValue("EOM".data(using: .utf8)!, for: self.characteristicForText, type: .withResponse)
+            }
+            
+            return
+        }
+        
+        self.amountToSend = self.ownedTextData.count + self.sentDataIndex
+        if let mtu = self.peripheral?.maximumWriteValueLength(for: .withResponse) {
+            self.amountToSend = min(self.amountToSend, mtu)
+        }
+        
+        let subData = self.ownedTextData.subdata(in: self.sentDataIndex..<(self.amountToSend + self.sentDataIndex))
+        
+        self.peripheral.writeValue(subData, for: self.characteristicForText, type: .withResponse)
+    }
+    
+    func readDataFromCharacteristic() {
+        self.peripheral.writeValue("readData".data(using: .utf8)!, for: self.characteristicForText, type: .withoutResponse)
+    }
+    
+    func enableObjectsRelatedToSwitch(on: Bool) {
+        self.synchronizingSwitch.isEnabled = on
+        
+        self.subscribingSwitchStateView.backgroundColor = on ? .green : .red
+    }
+    
+    func enableObjectsRelatedToText(on: Bool) {
+        self.ownedTextView.isEditable = on
+        self.sendTextButton.isEnabled = on
+        self.readTextButton.isEnabled = on
+        
+        self.subscribingTextStateView.backgroundColor = on ? .green : .red
+    }
+}
+
+// MARK: - Extension for Selector methods
+extension CentralManagerViewController {
     @IBAction func synchronizingSwitch(_ sender: UISwitch) {
-        self.peripheral.writeValue(sender.isOn ? "switchOn".data(using: .utf8)! : "switchOff".data(using: .utf8)!, for: self.characteristic, type: .withResponse)
+        self.peripheral.writeValue(sender.isOn ? "switchOn".data(using: .utf8)! : "switchOff".data(using: .utf8)!, for: self.characteristicForSwitch, type: .withResponse)
     }
     
     @IBAction func sendTextButton(_ sender: Any) {
@@ -92,54 +154,9 @@ class CentralManagerViewController: UIViewController {
             self.present(peripheralListVC, animated: true, completion: nil)
         }
     }
-    
-    func foundCentral() {
-        if let connectedPeripheral = self.centralManager.retrieveConnectedPeripherals(withServices: [UUIDs.serviceUUID]).last {
-            self.centralManager.connect(connectedPeripheral, options: nil)
-            
-        } else {
-            self.connectingButton.isEnabled = true
-        }
-    }
-    
-    func writeDataToCharacteristic() {
-        if self.sentDataIndex >= self.ownedTextData.count {
-            if let data = self.characteristic.value, let string = String(data: data, encoding: .utf8), string == "EOM" {
-                self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
-                self.ownedTextStateLabel.textColor = .red
-                
-                self.sendTextButton.isEnabled = true
-                
-            } else {
-                self.peripheral.writeValue("EOM".data(using: .utf8)!, for: self.characteristic, type: .withResponse)
-            }
-            
-            return
-        }
-        
-        self.amountToSend = self.ownedTextData.count + self.sentDataIndex
-        if let mtu = self.peripheral?.maximumWriteValueLength(for: .withResponse) {
-            self.amountToSend = min(self.amountToSend, mtu)
-        }
-        
-        let subData = self.ownedTextData.subdata(in: self.sentDataIndex..<(self.amountToSend + self.sentDataIndex))
-        
-        self.peripheral.writeValue(subData, for: self.characteristic, type: .withResponse)
-    }
-    
-    func readDataFromCharacteristic() {
-        self.peripheral.writeValue("readData".data(using: .utf8)!, for: self.characteristic, type: .withoutResponse)
-    }
-    
-    func enableObjects(on: Bool) {
-        self.synchronizingSwitch.isEnabled = on
-        self.ownedTextView.isEditable = on
-        self.sendTextButton.isEnabled = on
-        self.readTextButton.isEnabled = on
-    }
 }
 
-// MARK: - CBCentralManagerDelegate
+// MARK: - Extension for CBCentralManagerDelegate
 extension CentralManagerViewController: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
@@ -193,7 +210,11 @@ extension CentralManagerViewController: CBCentralManagerDelegate {
         
         self.connectingButton.setTitle("Connect To", for: .normal)
         
-        self.connectionStateView.backgroundColor = .red
+        self.subscribingSwitchStateView.backgroundColor = .red
+        self.subscribingTextStateView.backgroundColor = .red
+        
+        self.enableObjectsRelatedToSwitch(on: false)
+        self.enableObjectsRelatedToText(on: false)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -213,7 +234,8 @@ extension CentralManagerViewController: CBPeripheralDelegate {
             for service in services {
                 // FIXME: to check proper operator
                 if service.uuid == UUIDs.serviceUUID {
-                    peripheral.discoverCharacteristics([UUIDs.characteristicUUID], for: service)
+                    peripheral.discoverCharacteristics([UUIDs.characteristicForTextUUID], for: service)
+                    peripheral.discoverCharacteristics([UUIDs.characteristicForSwitchUUID], for: service)
                 }
             }
         }
@@ -228,8 +250,14 @@ extension CentralManagerViewController: CBPeripheralDelegate {
         
         if let characteristics = service.characteristics {
             for characteristic in characteristics {
-                if characteristic.uuid == UUIDs.characteristicUUID {
-                    self.characteristic = characteristic
+                if characteristic.uuid == UUIDs.characteristicForTextUUID {
+                    self.characteristicForText = characteristic
+                    
+                    self.peripheral.setNotifyValue(true, for: characteristic)
+                }
+                
+                if characteristic.uuid == UUIDs.characteristicForSwitchUUID {
+                    self.characteristicForSwitch = characteristic
                     
                     self.peripheral.setNotifyValue(true, for: characteristic)
                 }
@@ -243,13 +271,12 @@ extension CentralManagerViewController: CBPeripheralDelegate {
             return
         }
         
-        self.enableObjects(on: characteristic.isNotifying)
+        if characteristic.uuid == UUIDs.characteristicForTextUUID {
+            self.enableObjectsRelatedToText(on: characteristic.isNotifying)
+        }
         
-        if characteristic.isNotifying {
-            self.connectionStateView.backgroundColor = .green
-            
-        } else {
-            self.connectionStateView.backgroundColor = .red
+        if characteristic.uuid == UUIDs.characteristicForSwitchUUID {
+            self.enableObjectsRelatedToSwitch(on: characteristic.isNotifying)
         }
     }
     
@@ -260,19 +287,27 @@ extension CentralManagerViewController: CBPeripheralDelegate {
         }
         
         if let data = characteristic.value {
-            if let string = String(data: data, encoding: .utf8), string == "switchOn" {
-                self.synchronizingSwitch.isOn = true
+            if characteristic.uuid == UUIDs.characteristicForSwitchUUID {
+                if let string = String(data: data, encoding: .utf8), string == "switchOn" {
+                    self.synchronizingSwitch.isOn = true
+                    
+                }
                 
-            } else if let string = String(data: data, encoding: .utf8), string == "switchOff" {
-                self.synchronizingSwitch.isOn = false
-                
-            } else if let string = String(data: data, encoding: .utf8), string == "EOM" {
-                self.receivingTextLabel.text = String(data: self.receivingTextData, encoding: .utf8)
-                self.receivingTextStateLabel.text = "Received at \(self.dateFormatter.string(from: Date()))"
-                self.receivingTextStateLabel.textColor = .red
-                
-            } else {
-                self.receivingTextData.append(data)
+                if let string = String(data: data, encoding: .utf8), string == "switchOff" {
+                    self.synchronizingSwitch.isOn = false
+                    
+                }
+            }
+            
+            if characteristic.uuid == UUIDs.characteristicForTextUUID {
+                if let string = String(data: data, encoding: .utf8), string == "EOM" {
+                    self.receivingTextLabel.text = String(data: self.receivingTextData, encoding: .utf8)
+                    self.receivingTextStateLabel.text = "Received at \(self.dateFormatter.string(from: Date()))"
+                    self.receivingTextStateLabel.textColor = .red
+                    
+                } else {
+                    self.receivingTextData.append(data)
+                }
             }
         }
     }
@@ -284,9 +319,15 @@ extension CentralManagerViewController: CBPeripheralDelegate {
             return
         }
         
-        self.sentDataIndex += self.amountToSend
+        if characteristic.uuid == UUIDs.characteristicForSwitchUUID {
+            
+        }
         
-        self.writeDataToCharacteristic()
+        if characteristic.uuid == UUIDs.characteristicForTextUUID {
+            self.sentDataIndex += self.amountToSend
+            
+            self.writeDataToCharacteristic()
+        }
     }
     
     func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral) {

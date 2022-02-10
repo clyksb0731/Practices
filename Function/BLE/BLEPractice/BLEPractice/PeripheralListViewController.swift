@@ -53,7 +53,10 @@ class PeripheralListViewController: UIViewController {
             self.centralManager.scanForPeripherals(withServices: [UUIDs.serviceUUID], options: nil)
         }
     }
-    
+}
+
+// MARK: - Extension for Selector methods
+extension PeripheralListViewController {
     @IBAction func goBackToThePreviousVC(_ sender: UIButton) {
         self.centralManager.delegate = self.presentingViewController as! CentralManagerViewController
         
@@ -61,6 +64,7 @@ class PeripheralListViewController: UIViewController {
     }
 }
 
+// MARK: - Extension for UITableViewDelegate, UITableViewDataSource
 extension PeripheralListViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
