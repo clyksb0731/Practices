@@ -93,6 +93,7 @@ extension PeripheralManagerViewController {
                 if self.sentDataIndex >= self.ownedTextData.count {
                     self.isSendingEOM = true
                     
+                    // If not succeeded, peripheralManagerIsReady will be called
                     if self.peripheralManager.updateValue("EOM".data(using: .utf8)!, for: self.characteristicForText as! CBMutableCharacteristic, onSubscribedCentrals: nil) {
                         
                         self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
@@ -140,16 +141,21 @@ extension PeripheralManagerViewController {
 // MARK: - Extension for Selector methods
 extension PeripheralManagerViewController {
     @IBAction func synchronizingSwitch(_ sender: UISwitch) {
+        self.view.endEditing(true)
+        
         self.peripheralManager.updateValue(sender.isOn ? "switchOn".data(using: .utf8)! : "switchOff".data(using: .utf8)!, for: self.characteristicForSwitch as! CBMutableCharacteristic, onSubscribedCentrals: nil)
     }
     
     @IBAction func updateTextButton(_ sender: Any) {
+        self.view.endEditing(true)
+        
         guard let ownedTextData = self.ownedTextView.text.data(using: .utf8) else {
             return
         }
         
         self.ownedTextData = ownedTextData
         self.sentDataIndex = 0
+        //self.isSendingEOM = false // at end of message
         
         self.updateTextButton.isEnabled = false
         
@@ -271,11 +277,23 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
         
         if characteristic.uuid == UUIDs.characteristicForSwitchUUID {
             self.enableObjectsRelatedToSwitch(on: false)
+            
+            self.synchronizingSwitch.isOn = false
         }
         
         if characteristic.uuid == UUIDs.characteristicForTextUUID {
             self.enableObjectsRelatedToText(on: false)
+            
+            self.ownedTextStateLabel.text = "Owned Text State"
+            self.ownedTextStateLabel.textColor = .black
+            self.receivingTextStateLabel.text = "Receiving Text State"
+            self.receivingTextStateLabel.textColor = .black
+            
+            self.ownedTextView.text = ""
+            self.receivingTextLabel.text = ""
         }
+        
+        self.view.endEditing(true)
     }
     
     func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {

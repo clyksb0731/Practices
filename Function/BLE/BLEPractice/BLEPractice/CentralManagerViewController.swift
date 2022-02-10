@@ -30,7 +30,8 @@ class CentralManagerViewController: UIViewController {
     //var subData = Data()
     var sentDataIndex: Int = 0
     var amountToSend: Int = 0
-    //var isWritingEOM = false
+    var isWritingEOM = false
+    
     var receivingTextData = Data()
     
     var dateFormatter: DateFormatter = {
@@ -75,15 +76,8 @@ extension CentralManagerViewController {
     
     func writeDataToCharacteristic() {
         if self.sentDataIndex >= self.ownedTextData.count {
-            if let data = self.characteristicForText.value, let string = String(data: data, encoding: .utf8), string == "EOM" {
-                self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
-                self.ownedTextStateLabel.textColor = .red
-                
-                self.sendTextButton.isEnabled = true
-                
-            } else {
-                self.peripheral.writeValue("EOM".data(using: .utf8)!, for: self.characteristicForText, type: .withResponse)
-            }
+            self.peripheral.writeValue("EOM".data(using: .utf8)!, for: self.characteristicForText, type: .withResponse)
+            self.isWritingEOM = true
             
             return
         }
@@ -104,7 +98,6 @@ extension CentralManagerViewController {
     
     func enableObjectsRelatedToSwitch(on: Bool) {
         self.synchronizingSwitch.isEnabled = on
-        
         self.subscribingSwitchStateView.backgroundColor = on ? .green : .red
     }
     
@@ -120,6 +113,8 @@ extension CentralManagerViewController {
 // MARK: - Extension for Selector methods
 extension CentralManagerViewController {
     @IBAction func synchronizingSwitch(_ sender: UISwitch) {
+        self.view.endEditing(true)
+        
         self.peripheral.writeValue(sender.isOn ? "switchOn".data(using: .utf8)! : "switchOff".data(using: .utf8)!, for: self.characteristicForSwitch, type: .withResponse)
     }
     
@@ -128,8 +123,11 @@ extension CentralManagerViewController {
             return
         }
         
+        self.view.endEditing(true)
+        
         self.ownedTextData = ownedTextData
         self.sentDataIndex = 0
+        self.isWritingEOM = false
         
         self.sendTextButton.isEnabled = false
         
@@ -137,6 +135,8 @@ extension CentralManagerViewController {
     }
     
     @IBAction func readTextButton(_ sender: Any) {
+        self.view.endEditing(true)
+        
         self.readDataFromCharacteristic()
     }
     
@@ -210,11 +210,23 @@ extension CentralManagerViewController: CBCentralManagerDelegate {
         
         self.connectingButton.setTitle("Connect To", for: .normal)
         
+        self.enableObjectsRelatedToSwitch(on: false)
+        self.enableObjectsRelatedToText(on: false)
+        
         self.subscribingSwitchStateView.backgroundColor = .red
         self.subscribingTextStateView.backgroundColor = .red
         
-        self.enableObjectsRelatedToSwitch(on: false)
-        self.enableObjectsRelatedToText(on: false)
+        self.synchronizingSwitch.isOn = false
+        
+        self.ownedTextStateLabel.text = "Owned Text State"
+        self.ownedTextStateLabel.textColor = .black
+        self.receivingTextStateLabel.text = "Receiving Text State"
+        self.receivingTextStateLabel.textColor = .black
+        
+        self.ownedTextView.text = ""
+        self.receivingTextLabel.text = ""
+        
+        self.view.endEditing(true)
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -324,9 +336,17 @@ extension CentralManagerViewController: CBPeripheralDelegate {
         }
         
         if characteristic.uuid == UUIDs.characteristicForTextUUID {
-            self.sentDataIndex += self.amountToSend
-            
-            self.writeDataToCharacteristic()
+            if self.isWritingEOM {
+                self.ownedTextStateLabel.text = "Sent at \(self.dateFormatter.string(from: Date()))"
+                self.ownedTextStateLabel.textColor = .red
+                
+                self.sendTextButton.isEnabled = true
+                
+            } else {
+                self.sentDataIndex += self.amountToSend
+                
+                self.writeDataToCharacteristic()
+            }
         }
     }
     
