@@ -12,6 +12,15 @@ class PeripheralListViewController: UIViewController {
     
     @IBOutlet weak var baseView: UIView!
     
+    var topLineView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
     var tableView: UITableView!
     
     var centralManager: CBCentralManager!
@@ -36,10 +45,16 @@ class PeripheralListViewController: UIViewController {
             return tableView
         }()
         
+        self.view.addSubview(self.topLineView)
         self.view.addSubview(self.tableView)
         
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.topLineView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
+            self.topLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.topLineView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
+            self.topLineView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
+            
+            self.tableView.topAnchor.constraint(equalTo: self.topLineView.bottomAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor)
@@ -80,7 +95,7 @@ extension PeripheralListViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PeripheralCell", for: indexPath) as! PeripheralCell
-        cell.setCell(name: self.peripheralList[indexPath.row].name)
+        cell.setCell(nameAndUuid: "\(self.peripheralList[indexPath.row].name ?? "unknown"): \(self.peripheralList[indexPath.row].identifier.uuidString)")
         
         return cell
     }
@@ -106,6 +121,8 @@ extension PeripheralListViewController: CBCentralManagerDelegate {
         }
         
         self.peripheralList.append(peripheral)
+        
+        self.topLineView.isHidden = false
         
         self.tableView.reloadData()
     }

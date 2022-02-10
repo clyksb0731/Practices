@@ -11,7 +11,9 @@ class PeripheralCell: UITableViewCell {
     
     var peripheralNameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 15, weight: .bold)
+        label.font = .systemFont(ofSize: 12, weight: .bold)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5
         label.textColor = .black
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -41,7 +43,8 @@ class PeripheralCell: UITableViewCell {
         let safeArea = self.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             self.peripheralNameLabel.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor),
-            self.peripheralNameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20)
+            self.peripheralNameLabel.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 15),
+            self.peripheralNameLabel.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -5)
         ])
         
         NSLayoutConstraint.activate([
@@ -67,7 +70,7 @@ class PeripheralCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    func setCell(name: String?) {
-        self.peripheralNameLabel.text = name
+    func setCell(nameAndUuid: String?) {
+        self.peripheralNameLabel.text = nameAndUuid
     }
 }
