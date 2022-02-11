@@ -27,7 +27,8 @@ class CustomizedNaviChildViewController: UIViewController {
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
+        return .landscapeLeft // could be .portrait and so on
+        // This value affects the navigation controller orientation of this child view controller because the navigation controller use this value on the 'override var supportedInterfaceOrientations: UIInterfaceOrientationMask' with its property, topViewController's supportedInterfaceOrientations.
     }
 
     // default: true
