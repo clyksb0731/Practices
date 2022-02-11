@@ -180,21 +180,21 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZO8-Hf-h76">
                                 <rect key="frame" x="40" y="381.5" width="334" height="128"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ODk-ex-j45">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hmt-Mc-V78">
                                         <rect key="frame" x="5" y="5" width="324" height="118"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" red="0.99942404029999998" green="0.98555368190000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" systemColor="labelColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                    </textView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemGreenColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="ODk-ex-j45" secondAttribute="trailing" constant="5" id="4B3-vt-AnV"/>
-                                    <constraint firstAttribute="bottom" secondItem="ODk-ex-j45" secondAttribute="bottom" constant="5" id="AVm-h9-6dP"/>
-                                    <constraint firstItem="ODk-ex-j45" firstAttribute="top" secondItem="ZO8-Hf-h76" secondAttribute="top" constant="5" id="Kgh-YN-Ghr"/>
+                                    <constraint firstItem="hmt-Mc-V78" firstAttribute="leading" secondItem="ZO8-Hf-h76" secondAttribute="leading" constant="5" id="Wy9-Qe-Ch6"/>
+                                    <constraint firstItem="hmt-Mc-V78" firstAttribute="top" secondItem="ZO8-Hf-h76" secondAttribute="top" constant="5" id="XgU-Zh-Fq8"/>
+                                    <constraint firstAttribute="trailing" secondItem="hmt-Mc-V78" secondAttribute="trailing" constant="5" id="ecW-F6-DCH"/>
+                                    <constraint firstAttribute="bottom" secondItem="hmt-Mc-V78" secondAttribute="bottom" constant="5" id="hnH-of-gTP"/>
                                     <constraint firstAttribute="height" constant="128" id="lZT-Jk-SkC"/>
-                                    <constraint firstItem="ODk-ex-j45" firstAttribute="leading" secondItem="ZO8-Hf-h76" secondAttribute="leading" constant="5" id="vNn-wr-Ra2"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receiving Text State" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uAt-Vu-v2g">
@@ -286,8 +286,8 @@
                         <outlet property="ownedTextStateLabel" destination="vTu-Bo-SFH" id="7wF-hH-uuQ"/>
                         <outlet property="ownedTextView" destination="X0e-5r-aa7" id="M4H-0c-kno"/>
                         <outlet property="readTextButton" destination="sNe-kO-in9" id="6fC-jD-uZH"/>
-                        <outlet property="receivingTextLabel" destination="ODk-ex-j45" id="hzd-G9-WEg"/>
                         <outlet property="receivingTextStateLabel" destination="uAt-Vu-v2g" id="BDD-lX-blq"/>
+                        <outlet property="receivingTextView" destination="hmt-Mc-V78" id="SAx-dA-a6V"/>
                         <outlet property="sendTextButton" destination="Yma-mB-NHM" id="kpR-kz-RTA"/>
                         <outlet property="subscribingSwitchStateView" destination="OmG-dt-THd" id="4rL-dh-2a4"/>
                         <outlet property="subscribingTextStateView" destination="ZgH-fH-bkM" id="eVo-JG-RNO"/>
@@ -446,21 +446,21 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mDg-IJ-IH4">
                                 <rect key="frame" x="40" y="386.5" width="334" height="128"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taG-eh-XpR">
-                                        <rect key="frame" x="5" y="5" width="324" height="118"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ajr-4u-GOQ">
+                                        <rect key="frame" x="5" y="4.5" width="324" height="118"/>
+                                        <color key="backgroundColor" red="0.99942404029999998" green="0.98555368190000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" systemColor="labelColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                    </textView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemGreenColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="taG-eh-XpR" secondAttribute="trailing" constant="5" id="HWl-dX-IE8"/>
-                                    <constraint firstAttribute="bottom" secondItem="taG-eh-XpR" secondAttribute="bottom" constant="5" id="R5K-3f-8rM"/>
-                                    <constraint firstItem="taG-eh-XpR" firstAttribute="leading" secondItem="mDg-IJ-IH4" secondAttribute="leading" constant="5" id="Ucm-Gu-YiU"/>
+                                    <constraint firstItem="ajr-4u-GOQ" firstAttribute="leading" secondItem="mDg-IJ-IH4" secondAttribute="leading" constant="5" id="4MY-Xt-W86"/>
+                                    <constraint firstAttribute="trailing" secondItem="ajr-4u-GOQ" secondAttribute="trailing" constant="5" id="8gZ-zC-VRK"/>
+                                    <constraint firstItem="ajr-4u-GOQ" firstAttribute="top" secondItem="mDg-IJ-IH4" secondAttribute="top" constant="4.5" id="9aY-Z3-yjA"/>
                                     <constraint firstAttribute="height" constant="128" id="WDZ-2R-8lY"/>
-                                    <constraint firstItem="taG-eh-XpR" firstAttribute="top" secondItem="mDg-IJ-IH4" secondAttribute="top" constant="5" id="gfw-4o-eMg"/>
+                                    <constraint firstAttribute="bottom" secondItem="ajr-4u-GOQ" secondAttribute="bottom" constant="5.5" id="kaw-Ap-k6H"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receiving Text State" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="w6w-kv-mqH">
@@ -537,8 +537,8 @@
                     <connections>
                         <outlet property="ownedTextStateLabel" destination="6u2-I8-Z6I" id="q7A-9t-bZu"/>
                         <outlet property="ownedTextView" destination="CiL-eG-GmT" id="N0o-ni-lBm"/>
-                        <outlet property="receivingTextLabel" destination="taG-eh-XpR" id="18h-7U-VoC"/>
                         <outlet property="receivingTextStateLabel" destination="w6w-kv-mqH" id="OOh-cn-mwz"/>
+                        <outlet property="receivingTextView" destination="ajr-4u-GOQ" id="qwH-Ga-1cn"/>
                         <outlet property="startAdvertisingButton" destination="EQU-aB-D0v" id="PP6-iG-2ba"/>
                         <outlet property="subscribingSwitchStateView" destination="bfG-7P-c8N" id="ge7-mL-aO2"/>
                         <outlet property="subscribingTextStateView" destination="55O-ib-gwa" id="b8q-xu-Aen"/>

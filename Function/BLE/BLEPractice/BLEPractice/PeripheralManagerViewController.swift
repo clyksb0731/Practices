@@ -16,7 +16,7 @@ class PeripheralManagerViewController: UIViewController {
     @IBOutlet weak var ownedTextView: UITextView!
     @IBOutlet weak var ownedTextStateLabel: UILabel!
     @IBOutlet weak var updateTextButton: UIButton!
-    @IBOutlet weak var receivingTextLabel: UILabel!
+    @IBOutlet weak var receivingTextView: UITextView!
     @IBOutlet weak var receivingTextStateLabel: UILabel!
     @IBOutlet weak var startAdvertisingButton: UIButton!
     
@@ -79,11 +79,14 @@ extension PeripheralManagerViewController {
             return
         }
         
+        print("Full data count: \(self.ownedTextData.count)")
         while true {
-            var amountToSend = self.ownedTextData.count + self.sentDataIndex
+            var amountToSend = self.ownedTextData.count - self.sentDataIndex
             if let mtu = self.connectedCentral?.maximumUpdateValueLength {
                 amountToSend = min(amountToSend, mtu)
             }
+            
+            print("Subdata from index: \(self.sentDataIndex) befor index: \(amountToSend + self.sentDataIndex)")
             
             let subData = self.ownedTextData.subdata(in: self.sentDataIndex..<(amountToSend + self.sentDataIndex))
             
@@ -108,7 +111,7 @@ extension PeripheralManagerViewController {
                 }
                 
             } else {
-                break;
+                break
             }
         }
     }
@@ -244,7 +247,7 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
                         self.updateDataToCharacteristicForText()
                         
                     } else if let string = String(data: data, encoding: .utf8), string == "EOM" {
-                        self.receivingTextLabel.text = String(data: self.receivingTextData, encoding: .utf8)
+                        self.receivingTextView.text = String(data: self.receivingTextData, encoding: .utf8)
                         self.receivingTextStateLabel.text = "Received at \(self.dateFormatter.string(from: Date()))"
                         self.receivingTextStateLabel.textColor = .red
                         
@@ -290,7 +293,7 @@ extension PeripheralManagerViewController: CBPeripheralManagerDelegate {
             self.receivingTextStateLabel.textColor = .black
             
             self.ownedTextView.text = ""
-            self.receivingTextLabel.text = ""
+            self.receivingTextView.text = ""
         }
         
         self.view.endEditing(true)

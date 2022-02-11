@@ -16,7 +16,7 @@ class CentralManagerViewController: UIViewController {
     @IBOutlet weak var ownedTextView: UITextView!
     @IBOutlet weak var ownedTextStateLabel: UILabel!
     @IBOutlet weak var sendTextButton: UIButton!
-    @IBOutlet weak var receivingTextLabel: UILabel!
+    @IBOutlet weak var receivingTextView: UITextView!
     @IBOutlet weak var receivingTextStateLabel: UILabel!
     @IBOutlet weak var readTextButton: UIButton!
     @IBOutlet weak var connectingButton: UIButton!
@@ -82,7 +82,7 @@ extension CentralManagerViewController {
             return
         }
         
-        self.amountToSend = self.ownedTextData.count + self.sentDataIndex
+        self.amountToSend = self.ownedTextData.count - self.sentDataIndex
         if let mtu = self.peripheral?.maximumWriteValueLength(for: .withResponse) {
             self.amountToSend = min(self.amountToSend, mtu)
         }
@@ -224,7 +224,7 @@ extension CentralManagerViewController: CBCentralManagerDelegate {
         self.receivingTextStateLabel.textColor = .black
         
         self.ownedTextView.text = ""
-        self.receivingTextLabel.text = ""
+        self.receivingTextView.text = ""
         
         self.view.endEditing(true)
     }
@@ -313,9 +313,11 @@ extension CentralManagerViewController: CBPeripheralDelegate {
             
             if characteristic.uuid == UUIDs.characteristicForTextUUID {
                 if let string = String(data: data, encoding: .utf8), string == "EOM" {
-                    self.receivingTextLabel.text = String(data: self.receivingTextData, encoding: .utf8)
+                    self.receivingTextView.text = String(data: self.receivingTextData, encoding: .utf8)
                     self.receivingTextStateLabel.text = "Received at \(self.dateFormatter.string(from: Date()))"
                     self.receivingTextStateLabel.textColor = .red
+                    
+                    self.receivingTextData = Data()
                     
                 } else {
                     self.receivingTextData.append(data)
