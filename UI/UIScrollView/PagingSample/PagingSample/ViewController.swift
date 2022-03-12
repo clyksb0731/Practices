@@ -278,6 +278,8 @@ extension ViewController {
     }
     
     @objc func pageControl(_ sender: UIPageControl) {
+        self.previousPointX = scrollView.contentOffset.x
+        
         if sender.currentPage == 0 {
             self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         }
