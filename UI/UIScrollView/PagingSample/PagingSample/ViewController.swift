@@ -116,7 +116,7 @@ class ViewController: UIViewController {
         pageControl.pageIndicatorTintColor = .gray
         pageControl.hidesForSinglePage = true
         pageControl.numberOfPages = 2
-        pageControl.addTarget(self, action: #selector(pageControl(_:)), for: .touchUpInside)
+        pageControl.addTarget(self, action: #selector(pageControl(_:)), for: .valueChanged)
         pageControl.translatesAutoresizingMaskIntoConstraints = false
         
         return pageControl
@@ -279,11 +279,11 @@ extension ViewController {
     
     @objc func pageControl(_ sender: UIPageControl) {
         if sender.currentPage == 0 {
-            self.scrollView.setContentOffset(CGPoint(x: UIScreen.main.bounds.width, y: 0), animated: true)
+            self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         }
         
         if sender.currentPage == 1 {
-            self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+            self.scrollView.setContentOffset(CGPoint(x: UIScreen.main.bounds.width, y: 0), animated: true)
         }
     }
 }
