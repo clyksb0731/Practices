@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="RecordAudio" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DBJ-Rz-LcT">
+                                <rect key="frame" x="182.5" y="194" width="49" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="녹음"/>
+                                <connections>
+                                    <action selector="recordButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MXr-J0-ath"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WHc-6L-W3A">
+                                <rect key="frame" x="182.5" y="325" width="49" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="재생"/>
+                                <connections>
+                                    <action selector="playButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ico-nZ-3UP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0rh-R8-Gvd">
+                                <rect key="frame" x="246" y="325" width="76.5" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="재생 멈춤"/>
+                                <connections>
+                                    <action selector="stopPlayingButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="jvo-8k-DSY"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C6B-pM-4ma">
+                                <rect key="frame" x="246" y="194" width="77" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="녹음 멈춤"/>
+                                <connections>
+                                    <action selector="stopRecordingButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qfv-kd-3hJ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="15Z-OE-5eH">
+                                <rect key="frame" x="169" y="265" width="76.5" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="녹음 삭제"/>
+                                <connections>
+                                    <action selector="deleteRecordingFileButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RRs-0x-ane"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="0rh-R8-Gvd" firstAttribute="leading" secondItem="WHc-6L-W3A" secondAttribute="trailing" constant="14.5" id="3R1-4h-RKr"/>
+                            <constraint firstItem="15Z-OE-5eH" firstAttribute="top" secondItem="DBJ-Rz-LcT" secondAttribute="bottom" constant="40" id="9QY-Ak-fL2"/>
+                            <constraint firstItem="WHc-6L-W3A" firstAttribute="top" secondItem="DBJ-Rz-LcT" secondAttribute="bottom" constant="100" id="DGQ-Tc-9nx"/>
+                            <constraint firstItem="DBJ-Rz-LcT" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="iKg-v3-VpG"/>
+                            <constraint firstItem="C6B-pM-4ma" firstAttribute="centerY" secondItem="DBJ-Rz-LcT" secondAttribute="centerY" id="lm2-ag-7wl"/>
+                            <constraint firstItem="0rh-R8-Gvd" firstAttribute="centerY" secondItem="WHc-6L-W3A" secondAttribute="centerY" id="o0u-Ra-9f1"/>
+                            <constraint firstItem="WHc-6L-W3A" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="q6n-q1-4ks"/>
+                            <constraint firstItem="C6B-pM-4ma" firstAttribute="leading" secondItem="DBJ-Rz-LcT" secondAttribute="trailing" constant="14.5" id="rhz-Eo-oMz"/>
+                            <constraint firstItem="15Z-OE-5eH" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="tyt-7c-MQh"/>
+                            <constraint firstItem="DBJ-Rz-LcT" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="150" id="yft-CP-cDY"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-12" y="64"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
