@@ -289,8 +289,10 @@ extension ViewController {
             self.chatableView.insertRows(at: indexPaths, with: .none)
             DispatchQueue.main.async {
                 self.chatableView.reloadData()
-                self.chatableView.scrollToRow(at: IndexPath(row: self.oldMessages.count, section: 0), at: .top, animated: false)
-                self.chatableView.contentOffset.y += initialContentOffSetY
+                DispatchQueue.main.async {
+                    self.chatableView.scrollToRow(at: IndexPath(row: self.oldMessages.count, section: 0), at: .top, animated: false)
+                    self.chatableView.contentOffset.y += initialContentOffSetY
+                }
             }
         }
     }
