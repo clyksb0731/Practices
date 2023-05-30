@@ -12,10 +12,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let _ = SupportingMethods.shared // To make notiView frame.
     }
     
     @IBAction func StartAnimator(_ sender: UIButton) {
-        SupportingMethods.shared.start()
+        SupportingMethods.shared.showNotiAlert()
     }
     
     @IBAction func newVC(_ sender: UIButton) {

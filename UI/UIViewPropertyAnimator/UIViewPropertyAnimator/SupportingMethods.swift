@@ -53,7 +53,7 @@ class SupportingMethods {
     private lazy var notiButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.blue, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
+        button.titleLabel?.font = .systemFont(ofSize: 15, weight: .bold)
         button.addTarget(self, action: #selector(notiButton(_:)), for: .touchUpInside)
         button.setTitle("더보기", for: .normal)
         button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -72,7 +72,7 @@ class SupportingMethods {
     
     static let shared = SupportingMethods()
     
-    var count = 1
+    var count = 0
     
     private init() {
         self.initializeAlertNoti()
@@ -146,7 +146,7 @@ class SupportingMethods {
     func showNotiAlert(notiButtonAction: (() -> ())? = nil) {
         self.count += 1
         SupportingMethods.keyWindow.bringSubviewToFront(self.notiBaseView)
-        self.notiTitleLabel.text = "테스트 입니다. \(self.count)"
+        self.notiTitleLabel.text = "테스트 입니다: \(self.count)"
         self.notiButtonAction = notiButtonAction
         self.notiButton.isHidden = notiButtonAction == nil
 

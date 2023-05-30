@@ -16,6 +16,8 @@ class ViewController2: UIViewController {
     }
     
     @IBAction func start(_ sender: UIButton) {
-        SupportingMethods.shared.start()
+        SupportingMethods.shared.showNotiAlert {
+            print("Noti alert has performed.")
+        }
     }
 }
