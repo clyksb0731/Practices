@@ -46,6 +46,8 @@ class SupportingMethods {
     
     static let shared = SupportingMethods()
     
+    var count = 1
+    
     private init() {
         self.initializeAlertNoti()
     }
@@ -97,54 +99,48 @@ class SupportingMethods {
     }
     
     func start() {
+        self.count += 1
         SupportingMethods.keyWindow.bringSubviewToFront(self.notiView)
-        self.notiTitleLabel.text = "테스트 입니다."
+        self.notiTitleLabel.text = "테스트 입니다. \(self.count)"
 
         self.showNotiAnimator?.stopAnimation(false)
-        self.showNotiAnimator?.finishAnimation(at: .start)
+        self.showNotiAnimator?.finishAnimation(at: .end)
         
-        if self.showNotiAnimator == nil {
+        if self.showNotiAnimator == nil || self.showNotiAnimator?.state == .inactive {
             print("self.notiView.frame.height: \(self.notiView.frame.height)")
-            self.notiViewBottomAnchor.constant = SupportingMethods.keyWindow.safeAreaInsets.top + 8 + self.notiView.frame.height
-            self.showNotiAnimator = UIViewPropertyAnimator(duration: 1.0, curve: .easeIn, animations: {
+            self.showNotiAnimator = UIViewPropertyAnimator(duration: 0.25, curve: .easeIn, animations: {
+                self.notiViewBottomAnchor.constant = SupportingMethods.keyWindow.safeAreaInsets.top + 8 + self.notiView.frame.height
                 SupportingMethods.keyWindow.layoutIfNeeded()
             })
+            
+            self.showNotiAnimator?.addCompletion({ position in
+                switch position {
+                case .start:
+                    print("position start")
+                    self.showNotiAnimator = nil
+
+                case .current:
+                    print("position current")
+
+                case .end:
+                    print("position end")
+                    self.close()
+
+                @unknown default:
+                    fatalError()
+                }
+            })
+            
+            self.showNotiAnimator?.startAnimation()
         }
-        
-        self.showNotiAnimator?.addCompletion({ position in
-            switch position {
-            case .start:
-                print("position start")
-//                self.notiViewBottomAnchor.constant = SupportingMethods.keyWindow.safeAreaInsets.top + 8 + self.notiView.frame.height
-//                self.showNotiAnimator = UIViewPropertyAnimator(duration: 1.0, curve: .easeIn, animations: {
-//                    SupportingMethods.keyWindow.layoutIfNeeded()
-//                })
-//
-//                self.showNotiAnimator?.startAnimation()
-                
-                self.showNotiAnimator = nil
-
-            case .current:
-                print("position current")
-
-            case .end:
-                print("position end")
-                self.notiViewBottomAnchor.constant = 30
-                self.showNotiAnimator = UIViewPropertyAnimator(duration: 1.0, curve: .easeIn, animations: {
-                    SupportingMethods.keyWindow.layoutIfNeeded()
-                })
-
-                self.showNotiAnimator?.startAnimation()
-//                UIViewPropertyAnimator.runningPropertyAnimator(withDuration: 0.2, delay: 2.0) {
-//                    SupportingMethods.keyWindow.layoutIfNeeded()
-//                }
-
-            @unknown default:
-                fatalError()
-            }
+    }
+    
+    func close() {
+        self.showNotiAnimator = UIViewPropertyAnimator(duration: 1.0, curve: .easeIn, animations: {
+            self.notiViewBottomAnchor.constant = 0
+            SupportingMethods.keyWindow.layoutIfNeeded()
         })
-
-        self.showNotiAnimator?.startAnimation()
+        self.showNotiAnimator?.startAnimation(afterDelay: 3.0)
     }
 }
 
