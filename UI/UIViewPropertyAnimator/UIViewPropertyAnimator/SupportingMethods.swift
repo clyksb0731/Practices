@@ -165,7 +165,6 @@ class SupportingMethods {
                 switch position {
                 case .start:
                     print("position start")
-                    self.showNotiAnimator = nil
 
                 case .current:
                     print("position current")
